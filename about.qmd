@@ -1,0 +1,16 @@
+---
+title: "About"
+image: profile.jpg
+about:
+  template: jolla
+  links:
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/%EC%9E%AC%ED%98%81-%EC%9D%B4-270944207/
+    - icon: github
+      text: Github
+      href: https://github.com/Jhyeok-lee
+
+---
+
+About this blog

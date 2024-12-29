@@ -1,0 +1,20 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Knowledge Log"
+  navbar:
+    right:
+      - about.qmd
+      - icon: github
+        href: https://github.com/Jhyeok-lee
+      - icon: linkedin
+        href: https://www.linkedin.com/in/%EC%9E%AC%ED%98%81-%EC%9D%B4-270944207/
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+
+
+
