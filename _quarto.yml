@@ -1,7 +1,11 @@
 project:
   type: website
   output-dir: docs
-
+  render:
+    - "*.qmd"
+    - "*.ipynb"
+    - "!template/"
+  
 website:
   title: "Knowledge Log"
   navbar:
