@@ -1,0 +1,27 @@
+project:
+  type: website
+  output-dir: docs
+  render:
+    - "*.qmd"
+    - "*.ipynb"
+    - "!template/"
+  
+website:
+  title: "Knowledge Log"
+  navbar:
+    right:
+      - about.qmd
+      - icon: github
+        href: https://github.com/Jhyeok-lee
+      - icon: linkedin
+        href: https://www.linkedin.com/in/%EC%9E%AC%ED%98%81-%EC%9D%B4-270944207/
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    include-in-header:
+      text: |
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+
+
