@@ -17,7 +17,8 @@ website:
         href: https://www.linkedin.com/in/%EC%9E%AC%ED%98%81-%EC%9D%B4-270944207/
 format:
   html:
-    theme: cosmo
+    theme: simplex
+    fontsize: 1.0em
     css: styles.css
     include-in-header:
       text: |
