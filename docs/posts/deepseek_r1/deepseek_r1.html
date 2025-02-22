@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jaehyeok Lee">
+<meta name="dcterms.date" content="2025-02-22">
+
+<title>Knowledge Log - DeepSeek-R1 Paper Review</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&amp;family=Noto+Sans:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Knowledge Log</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/Jhyeok-lee"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/%EC%9E%AC%ED%98%81-%EC%9D%B4-270944207/"><i class="bi bi-linkedin" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">DeepSeek-R1 Paper Review</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Jaehyeok Lee </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">February 22, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<p>DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning <a href="https://arxiv.org/pdf/2501.12948">https://arxiv.org/pdf/2501.12948</a></p>
+<section id="abstract" class="level1">
+<h1>Abstract</h1>
+<ul>
+<li>DeepSeek-R1-Zero, DeepSeek-R1 소개</li>
+<li>DeepSeek-R1-Zero는 SFT없이 RL만으로 학습. 추론 능력은 엄청 좋아지지만 가독성이나 언어 섞임 문제가 있음.</li>
+<li>DeepSeek-R1은 이 문제를 방지하기 위해 RL전에 cold-start data 수집 및 multi-state training를 수행.</li>
+</ul>
+</section>
+<section id="introduction" class="level1">
+<h1>1. Introduction</h1>
+<ul>
+<li>순수 RL로 추론 능력(reasoning capabilities)를 갖출 수 있음.</li>
+<li>DeepSeek-R1-Zero : DeepSeek-V3-Base를 base model로 하고 GRPO를 학습 알고리즘으로 사용.</li>
+<li>DeepSeek-R1 : DeepSeek-V3-Base를 수 천(thousands of)의 cold-start data로 fine-tune을 하고, DeepSeek-R1-Zero 처럼 RL을 수행. RL이 수렴에 가까워지면, RL checkpoint에서 rejection sampling을 통해 새 SFT data를 만들고, DeepSeek-V3를 학습시켰던 데이터(writing, factual QA, and self-cognition)와 합친 후 DeepSeek-V3-Base model을 재학습(SFT). fine-tuing 이후 모든 시나리오의 prompts에 대해 RL. 이렇게 하면 o1-1217을 능가.</li>
+<li>Qwen2.5-32B에 RL을 적용하는 것보다 DeepSeek-R1에서 직접 증류하는 것이 성능이 더 좋다.</li>
+</ul>
+<section id="contributions" class="level2">
+<h2 class="anchored" data-anchor-id="contributions">1.1 Contributions</h2>
+<p>Post-Training: Large-Scale Reinforcement Learning on the Base Model</p>
+<ul>
+<li>DeepSeek-R1-Zero는 SFT 없이 RL 만으로 복잡한 문제에 대해 chain-of-thought(CoT)를 진행함. 모델은 self-verification, reflection, generating long CoTs를 설명한다. LLM이 pure RL로도 reasoning capabilities가 강화되는 것을 보여준다.</li>
+<li>Reasoning pattern을 강화하고 human preferences를 조절하는 것을 목표로 하는 2번의 RL, 모델의 reasoning and non-reasoning capabilities 역할을 추가하는 2번의 SFT pipline을 소개.</li>
+</ul>
+<p>Distillation: Smaller Models Can be Powerful Too</p>
+<ul>
+<li>큰 reasoning model에서 작은 model로 distillation을 하는 것은 작은 model이 RL 하는 것보다 성능이 좋다.</li>
+<li>DeepSeek-R1으로 생성한 reasoning data로 널리 사용되는 model을 fine-tune 했다.</li>
+</ul>
+</section>
+</section>
+<section id="approach" class="level1">
+<h1>2 Approach</h1>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">2.1 Overview</h2>
+<ul>
+<li>DeepSeek-R1-Zero : RL만 사용해서 reasoning capabilities 상승</li>
+<li>DeepSeek-R1 : 작은 cold-start data(long Chain-of-Thought)와 RL로 성능 더 상승</li>
+<li>Distill the reasoning capability from DeepSeek-R1 to small dense models</li>
+</ul>
+</section>
+<section id="deepseek-r1-zero-reinforcement-learning-on-the-base-model" class="level2">
+<h2 class="anchored" data-anchor-id="deepseek-r1-zero-reinforcement-learning-on-the-base-model">2.2 DeepSeek-R1-Zero: Reinforcement Learning on the Base Model</h2>
+<section id="reinforcement-learning-algorithm" class="level3">
+<h3 class="anchored" data-anchor-id="reinforcement-learning-algorithm">2.2.1 Reinforcement Learning Algorithm</h3>
+<p>GRPO (Group Relative Policy Optimization)</p>
+<ul>
+<li>Training cost를 절약하기 위해 policy model의 크기와 동일한 critic model을 포기하고 group scores를 측정하는 GRPO를 도입.</li>
+<li>질문 <span class="math inline">\(q\)</span>에 대해 GRPO는 old policy <span class="math inline">\(\pi_{\theta_\text{OLD}}\)</span>의 outputs <span class="math inline">\(\{o_1, o_2, \cdots, o_G\}\)</span>를 구하고 다음의 objective function을 최대화를 해서 policy model <span class="math inline">\(\pi_\theta\)</span>를 최적화한다. <span class="math display">\[
+\mathcal{J}_{\text{GRPO}}
+= \mathbb{E}[q \sim P(Q), \{o_i\}_{i=1}^{G} \sim \pi_{\theta_\text{OLD}}(O|q)]
+\]</span> <span class="math display">\[
+\frac{1}{G} \sum_{i=1}^G
+\left(
+\text{min} \left(
+  \frac{\pi_\theta(o_i|q)}{\pi_{\text{old}}(o_i|q)}A_i,
+  \text{clip} \left(\frac{\pi_\theta(o_i|q)}{\pi_{\text{old}}(o_i|q)}, 1-\epsilon, 1+\epsilon \right) A_i
+\right) - \beta \; \mathbb{D}_{KL}(\pi_\theta || \pi_{ref})
+\right)
+\]</span> <span class="math display">\[
+\mathbb{D}_{KL}(\pi_\theta || \pi_{ref}) =
+\frac{\pi_{ref}(o_i|q)}{\pi_\theta(o_i|q)} -
+\text{log} \frac{\pi_{ref}(o_i|q)}{\pi_\theta(o_i|q)} - 1
+\]</span></li>
+<li><span class="math inline">\(\epsilon\)</span>과 <span class="math inline">\(\beta\)</span>는 hyper-parameters</li>
+<li><span class="math inline">\(A_i\)</span>는 a group of rewards <span class="math inline">\(\{r_1, r_2, \cdots, r_G\}\)</span>로 계산한 advantage <span class="math display">\[
+A_i = \frac{r_i - \text{mean}(\{r_1, r_2, \cdots, r_G\})}
+{\text{std}(\{r_1, r_2, \cdots, r_G\})}
+\]</span></li>
+</ul>
+</section>
+<section id="reward-modeling" class="level3">
+<h3 class="anchored" data-anchor-id="reward-modeling">2.2.2 Reward Modeling</h3>
+<ul>
+<li>reward는 RL의 최적화 방향을 결정</li>
+<li>DeepSeek-R1-Zero는 2가지 rule-based reward system을 구성</li>
+<li>Accuracy rewards : response가 맞는지 체크. 수학 문제의 경우 특정 박스 안에 출력해서 답 비교, LeetCode 문제의 경우 test cases를 가지고 피드백을 생성가능. (compiler도 사용)</li>
+<li>Format rewards : <code>&lt;think&gt;</code>, <code>&lt;/think&gt;</code> tag 사이에 생각을 하도록 강제하는 reward model도 사용</li>
+<li>메모) SFT의 경우 답변 스크립트를 모두 작성하는 것을 기준으로 한듯. RL은 마지막 최종 답(수학, 코딩문제)를 비교해서 맞으면 reward.</li>
+<li>outcome reward model를 추가적으로 사용하지 않음. (비용 등 문제)</li>
+</ul>
+</section>
+<section id="training-template" class="level3">
+<h3 class="anchored" data-anchor-id="training-template">2.2.3 Training Template</h3>
+<pre><code>A conversation between User and Assistant. The user asks a question, and the Assistant solves it. The assistant first thinks about the reasoning process in the mind and then provides the user with the answer. The reasoning process and answer are enclosed within &lt;think&gt; &lt;/think&gt; and &lt;answer&gt; &lt;/answer&gt; tags, respectively, i.e., &lt;think&gt; reasoning process here &lt;/think&gt; &lt;answer&gt; answer here &lt;/answer&gt;.
+User: prompt.
+Assistant:</code></pre>
+<ul>
+<li>위와 같은 template로 reasoning process를 생성하고 최종 답을 내놓는다.</li>
+<li>이 구조적 제약은 content-specific bias(reflective reasoning - 반성적 추론을 강제하거나 특정 문제 해결 전략을 promoting 하거나 등)를 피하고 자연스러운 추론을 관찰하기 위해 추가.</li>
+<li>메모) 알고리즘 문제 테스트했을때 DP만 계속 생각하더라</li>
+</ul>
+</section>
+<section id="perpformance-self-evolution-process-and-aha-moment-of-deepseek-r1-zero" class="level3">
+<h3 class="anchored" data-anchor-id="perpformance-self-evolution-process-and-aha-moment-of-deepseek-r1-zero">2.2.4 Perpformance, Self-evolution Process and Aha Moment of DeepSeek-R1-Zero</h3>
+<p>Performance of DeepSeek-R1-Zero</p>
+<ul>
+<li>RL만으로 AIME 2024 pass@1 score는 15.6% -&gt; 71.0%로 급격한 상승을 보여줌. o1-0912(74.4%)에 근접해짐.</li>
+</ul>
+<p>Self-evolution Process of DeepSeek-R1-Zero</p>
+<ul>
+<li>RL로 학습하면 할 수록 response의 길이가 점점 증가한다 -&gt; 자연스럽게 thinking time을 늘린다. (스스로 진화)</li>
+<li>또한 명시적으로 프로그래밍을 하지 않아도 reflection(심사숙고, model이 전단계를 다시 평가하는 것)과 다른 방법을 찾아보는 것이 생겨남.</li>
+</ul>
+<p>Aha Moment of DeepSeek-R1-Zero</p>
+<ul>
+<li>모델 학습 중간 버전에서 “aha moment”가 나타남. 이 순간 DeepSeek-R1-Zero는 생각할 시간을 가지고 앞서 내놓았던 방법을 재평가 한다. 이 행동은 reasoning 능력이 자라나고 있다는 것 뿐만 아니라 RL이 예상치 못한 정교한 결과를 이끄는 것을 보여준다.</li>
+<li>모델에 명시적으로 문제를 푸는 방법을 가르치는 것 보다 적절한 인센티브를 주면 자율적으로 문제 해결 전략을 배운다.</li>
+</ul>
+<p>Drawback of DeepSeek-R1-Zero</p>
+<ul>
+<li>강력한 추론 능력을 보이고 자체적으로 이 능력을 개발하지만 가독성 문제와 언어 섞임 문제가 있다.</li>
+</ul>
+</section>
+</section>
+<section id="deepseek-r1-reinforcement-learning-with-cold-start" class="level2">
+<h2 class="anchored" data-anchor-id="deepseek-r1-reinforcement-learning-with-cold-start">2.3 DeepSeek-R1: Reinforcement Learning with Cold Start</h2>
+<p>두가지 의문점 - 소량의 고품질 데이터로 cold start를 사용하면 성능이 더 오를까? - 명확하고 일관된 CoT를 생성하고 강력한 일반적인 역량(general capabilities)을 보려주려면 어떻게 user-friendly model을 학습시킬까? - 메모) DeepSeek-R1은 OpenAI의 o1으로 distillation 했다는 것이 강하게 의심됨. SFT 데이터는 o1으로 만들었을 가능성이 높음.</p>
+<section id="cold-start" class="level3">
+<h3 class="anchored" data-anchor-id="cold-start">2.3.1 Cold Start</h3>
+<ul>
+<li>불안정한 RL cold start을 막기위해 DeepSeek-R1에서는 fine-tuning 용 긴 CoT data을 수집해 초기 RL actor를 만든다.</li>
+<li>데이터 수집 방법 : long CoT를 가진 few-shot prompting, reflection과 verification을 생성하도록 요구하는 prompting, DeepSeek-R1-Zero outputs을 읽을 수 있는 포맷으로 만들기, human annotators로 결과를 후처리</li>
+<li>이 방법으로 수천 개의 데이터를 수집하고 DeepSeek-V3-Base를 fine-tuning, RL의 시작점.</li>
+<li>장점1, 가독성 : cold-start data를 만들때 response 끝에 요약을 추가한 가독성 있는 패턴을 설계, 어색한 response는 필터링. output format을 <code>|special_token|&lt;reasoning_process&gt;|special_token|&lt;summary&gt;,</code>로 정의.</li>
+<li>장점2, 잠재성 : 인간의 사전 지식으로 신중하게 패턴을 설계해서 DeepSeek-R1-Zero를 이김. Reasoning model은 반복학습이 더 효과적임.</li>
+</ul>
+</section>
+<section id="reasoning-oriented-reinforcement-learning" class="level3">
+<h3 class="anchored" data-anchor-id="reasoning-oriented-reinforcement-learning">2.3.2 Reasoning-oriented Reinforcement Learning</h3>
+<ul>
+<li>DeepSeek-V3-Base를 cold-start data로 fine-tuning 후 DeepSeek-R1-Zero 처럼 RL 수행. 잘 정의된 문제와 답(코딩, 수학, 과학, 논리 추론)과 같은 reasoning-intensive tasks를 학습해서 추론 능력을 향상시키는데 집중.</li>
+<li>RL prompts에 여러 언어가 있을 경우 학습 중에 CoT에서 언어 섞임 문제를 발견. 이를 완화하려고 CoT에서 target language의 proportion으로 language consistency reward를 도입. 이런 조정이 다소 모델 성능을 떨어뜨리지만 가독성을 높임.</li>
+<li>reasoning task의 정확도와 language consistency reward를 더해서 최종 reward를 만듬. 그리고 수렴할때까지 학습.</li>
+</ul>
+</section>
+<section id="rejection-sampling-and-supervised-find-tuning" class="level3">
+<h3 class="anchored" data-anchor-id="rejection-sampling-and-supervised-find-tuning">2.3.3 Rejection Sampling and Supervised Find-Tuning</h3>
+<ul>
+<li>앞의 RL가 수렴하면 이 checkpoint를 가지고 SFT 데이터를 모은다.</li>
+<li>이 단계에서는 일반적인 task를 강화하기 위한 데이터를 추가한다.</li>
+</ul>
+<p>Reasoning data</p>
+<ul>
+<li>Reasoning prompts를 만들고 앞에서 만든 RL checkpoint 모델의 outputs을 rejection sampling을 했다.</li>
+<li>이 단계에선 추가적인 데이터가 있음. 여기서 데이터셋을 확장하는데, 일부는 DeepSeek-V3에 정답(ground-truth)과 모델 예측을 입력해 DeppSeek-V3의 판단을 reward로 사용. (generative reward model, 개인적으로 이 ground-truth가 OpenAI o1의 response라고 생각한다.)</li>
+<li>읽기 어려운 output은 제외. 각 prompt마다 옳은 response만 유지. 600K training samples를 모음.</li>
+</ul>
+<p>Non-Reasoning data</p>
+<ul>
+<li>DeepSeek-V3의 SFT dataset의 부분을 재사용. 어떤 non-reasoning data에 대해 DeepSeek-V3에 prompting으로 CoT response 요구. 여기서 200K training samples를 모음.</li>
+</ul>
+<p>여기서 모은 800K samples로 DeepSeek-V3-Base를 2 epoch로 fine-tuning함.</p>
+</section>
+<section id="reinforcement-learning-for-all-scenarios" class="level3">
+<h3 class="anchored" data-anchor-id="reinforcement-learning-for-all-scenarios">2.3.4 Reinforcement Learning for all Scenarios</h3>
+<ul>
+<li>reward의 조합과 다양한 프롬프트 분포를 사용해 RL -&gt; helpfulness, harmlessness, reasoning capabilities</li>
+<li>Reasoning data는 DeepSeek-R1-Zero 처럼, 일반적인 data는 human preferences를 캐치하도록 DeepSeek-V3 처럼 preference pairs로 학습.</li>
+<li>helpfulness를 위해 summary에 집중. reasoning process를 방해를 최소화하기 위해 response와 user 사이 관련성, 효용성 집중.</li>
+<li>harmlessness를 위해 reasoning process와 summary를 포함한 모든 response를 평가.</li>
+<li>궁극적으로 reward 조합과 데이터 분포의 다양함은 도움됨.</li>
+</ul>
+</section>
+</section>
+<section id="distilation-empower-small-models-with-reasoning-capability" class="level2">
+<h2 class="anchored" data-anchor-id="distilation-empower-small-models-with-reasoning-capability">2.4 Distilation: Empower Small Models with Reasoning Capability</h2>
+<ul>
+<li>DeepSeek-R1의 800k samples를 가지고 Qwen, Llama를 SFT만(RL 없이) 해도 reasoning abilities를 향상시킴.</li>
+</ul>
+</section>
+</section>
+<section id="experiment" class="level1">
+<h1>3 Experiment</h1>
+<p>Benchmarks : 다양한 벤치마크 사용</p>
+<p>Evaluation Prompts</p>
+<p>Baselines</p>
+<p>Evaluation Setup</p>
+<ul>
+<li>maximum generation length : 32,768 tokens</li>
+<li>long-output reasoning models를 평가하는데 greedy decoding을 사용하는 것은 높은 반복율(똑같은 답변), checkpoints간에 변동성이 크다는 것을 확인. 그래서 기본적으로 pass@k 평가 사용, pass@1은 non-zero temperature 사용.</li>
+<li>sampling temperature 0.6, top-p 0.95, test set size에 따라 4~64 k responses</li>
+<li>Pass@1은 아래와 같이 계산, <span class="math inline">\(p_i\)</span>는 i-th response가 맞는지 체크. <span class="math display">\[
+\text{pass@1} = \frac{1}{k} \sum_{i=1}^k p_i
+\]</span></li>
+</ul>
+<section id="deepseek-r1-evaluation" class="level2">
+<h2 class="anchored" data-anchor-id="deepseek-r1-evaluation">3.1 DeepSeek-R1 Evaluation</h2>
+<ul>
+<li>여러가지 Benchmarks에서 좋아졌다.</li>
+</ul>
+</section>
+<section id="distilled-model-evaluation" class="level2">
+<h2 class="anchored" data-anchor-id="distilled-model-evaluation">3.2 Distilled Model Evaluation</h2>
+<ul>
+<li>Dilstilled 7B는 GPT-4o-0513 이김. Distilled 14B는 Qwwq-32B-preview 이김. Dilstilled 32B, 70B는 o1-mini 이김.</li>
+<li>이 distilled model에 추가적인 RL을 적용하면 성능이 더 올라간다. 추가 실험 필요해서 SFT한 결과만 남긴다.</li>
+</ul>
+</section>
+</section>
+<section id="discussion" class="level1">
+<h1>4. Discussion</h1>
+<section id="distilation-vs-reinforcement-learning" class="level2">
+<h2 class="anchored" data-anchor-id="distilation-vs-reinforcement-learning">4.1 Distilation vs Reinforcement Learning</h2>
+<ul>
+<li>distilation 없이 RL만 한 것은 distilation만 한 것보다 성능이 낮다.</li>
+<li>강력한 모델로 작은 모델에 distilation 하는 것이 가장 좋은 결과를 얻었다. 작은 모델을 large-scale RL을 한 것은 큰 연산을 요구하나 distilation 성능보다 낮다.</li>
+<li>distilation은 경제적이고 효과적이나, 지식의 한계점을 돌파하려면 더 강력한 base model과 더 큰 scale의 RL이 필요하다.</li>
+</ul>
+</section>
+<section id="unsuccessful-attempts" class="level2">
+<h2 class="anchored" data-anchor-id="unsuccessful-attempts">4.2 Unsuccessful Attempts</h2>
+<p>시도했으나 실패한 것. 이 방법으로 불가능하다는 뜻이 아님.</p>
+<p>Process Reward Model (PRM)</p>
+<ul>
+<li>현실적으로 세 가지 이유 때문에 힘듬. 1) 일반적인 reasoning에서 세밀한 단계를 정의하는 것, 2) 중간 단계가 맞는지 체크, 3) Reward Hacking 가능하고 재학습이 어려움.</li>
+<li>PRM은 top-N responses를 재정렬하거나 guided search에서 도움이 됨.</li>
+</ul>
+<p>Monte Carlo Tree Search (MCTS)</p>
+<ul>
+<li>특정한 reasoning 단계를 검색하기 위해 여러 태그를 생성. 학습을 위해 pre-trained value model에 의한 MCTS로 수집된 prompts의 답을 생성. 그리고 actor, value model을 학습.</li>
+<li>chess랑 다르게 token generation은 search space가 더 크다. node 확장 수를 제한하니까 local optima에 갖힘.</li>
+<li>fine-grained value model을 학습시키는 것은 어려움 -&gt; search process에 영향</li>
+</ul>
+</section>
+</section>
+<section id="conclusion-limitations-and-future-work" class="level1">
+<h1>5 Conclusion, Limitations, and Future Work</h1>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
