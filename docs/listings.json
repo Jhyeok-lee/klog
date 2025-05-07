@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html",
       "/posts/mcs_sql/mcs_sql.html",
       "/posts/xiyan_sql/xiyan_sql.html",
       "/posts/deepseek_r1/deepseek_r1.html",

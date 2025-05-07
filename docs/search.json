@@ -88,7 +88,7 @@
     "href": "index.html",
     "title": "Knowledge Log",
     "section": "",
-    "text": "MCS SQL Paper Review\n\n\n\n\n\n\nLLM\n\n\n\n\n\n\n\n\n\nMar 19, 2025\n\n\nJaehyeok Lee\n\n\n\n\n\n\n\n\n\n\n\n\nXiyan SQL Paper Review\n\n\n\n\n\n\nLLM\n\n\n\n\n\n\n\n\n\nMar 12, 2025\n\n\nJaehyeok Lee\n\n\n\n\n\n\n\n\n\n\n\n\nDeepSeek-R1 Paper Review\n\n\n\n\n\n\nLLM\n\n\n\n\n\n\n\n\n\nFeb 22, 2025\n\n\nJaehyeok Lee\n\n\n\n\n\n\n\n\n\n\n\n\n(Statistics110) 10. Expectation Continued\n\n\n\n\n\n\nstatistics110\n\n\n\n\n\n\n\n\n\nDec 29, 2024\n\n\nJaehyeok Lee\n\n\n\n\n\n\nNo matching items"
+    "text": "RLAIF vs RLHF Review\n\n\n\n\n\n\nLLM\n\n\n\n\n\n\n\n\n\nMay 8, 2025\n\n\nJaehyeok Lee\n\n\n\n\n\n\n\n\n\n\n\n\nMCS SQL Paper Review\n\n\n\n\n\n\nLLM\n\n\n\n\n\n\n\n\n\nMar 19, 2025\n\n\nJaehyeok Lee\n\n\n\n\n\n\n\n\n\n\n\n\nXiyan SQL Paper Review\n\n\n\n\n\n\nLLM\n\n\n\n\n\n\n\n\n\nMar 12, 2025\n\n\nJaehyeok Lee\n\n\n\n\n\n\n\n\n\n\n\n\nDeepSeek-R1 Paper Review\n\n\n\n\n\n\nLLM\n\n\n\n\n\n\n\n\n\nFeb 22, 2025\n\n\nJaehyeok Lee\n\n\n\n\n\n\n\n\n\n\n\n\n(Statistics110) 10. Expectation Continued\n\n\n\n\n\n\nstatistics110\n\n\n\n\n\n\n\n\n\nDec 29, 2024\n\n\nJaehyeok Lee\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/xiyan_sql/xiyan_sql.html",
@@ -166,5 +166,194 @@
     "title": "MCS SQL Paper Review",
     "section": "4.3 Implementation Details",
     "text": "4.3 Implementation Details\n\nLLM 모델 : GPT-4\n임베딩 모델 : text-embedding-ada-002\nsimilarity search : FAISS\nschema linking(table, column) prompts \\(p_t\\), \\(p_c\\) : 3개\nSQL generation prompts \\(p_q\\) : 5개\n각 GPT API call 마다 temperature 1.0, n=20 응답 생성\nSQL-generation, MCS 에는 k=20개의 question-SQL pairs를 few-shot example로 사용.\n타임아웃 180초\nconfidence score threshold 0.2"
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html",
+    "title": "RLAIF vs RLHF Review",
+    "section": "",
+    "text": "RLAIF vs RLHF: Scaling Reinforcement Learning from Human Feedback with AI Feedback https://arxiv.org/pdf/2309.00267"
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#preference-labeling-with-llms",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#preference-labeling-with-llms",
+    "title": "RLAIF vs RLHF Review",
+    "section": "2.1 Preference Labeling with LLMs",
+    "text": "2.1 Preference Labeling with LLMs\n\n“off-the-shelf” LLM(특정 downstream task가 아닌 일반적인 용도로 pre-train이나 instruction-tune을 한 LLM)으로 preferences를 annotate함. 2개의 후보 responses 중 어느것을 더 선호하는지 물음.\nprompt는 다음과 같이 구성\n\nPreamble(서문) : task의 도입부, 지시사항 설명\nFew-shot exemplars(모범 사례, optional) : input, responses 쌍, CoT reasoning 과정(optional), 선호 label\nSample to annotate : label 매길 sample (input)\nEnding : ending text, answer 칸 (“Preferred Response=”)\n\n이 prompt로 LLM을 실행. 그 다음 선호하는 토큰 “1”, “2”의 log-확률을 뽑아 softmax로 분포를 구한다(토큰 1, 토큰 2가 생성될 확률). one-hot 인코딩이나 다른 방법도 있었지만 이 방법이 정보를 더 포함한다.\n어떤 response가 나은지 물어보는 “Base preambles”, 자세한 지시사항을 주는 “Detailed preambles”를 실험했고, 모범 사례를 포함한 exemplars로 in-context learning도 실험했다.\n\n\n2.1.1 Addressing Position Bias\n\ncandidates(=responses) 순서 편향이 존재함.\n이 편향을 없애기 위해 inference(=labeling)를 순서를 바꿔 2번함. 그리고 평균내서 최종 선호 분포를 구함. (Appendix B)\n\n\n\n2.1.2 Eliciting Chain-of-Thought Reasoning\n\nCoT를 이끌어내기 위해 다음 2단계 실행. 1) 기존의 Ending(“Preferred Response=”)를 생각과 설명을 요청으로 변경(e.g. “Consiter the coherence, accuracy, coverage, and overall quality of each summary and explain which one is better. Rationale:”) 그리고 LLM으로 디코딩. 2) 그리고 나서 prompt, response, 원래의 Ending을 뒤에 붙이고 scoring을 한다. Figure3 추가\nZero-shot prompts는 reasoning이 어때야 하는지 예시 없음. Few-shot prompts에서는 모델이 따라야할 CoT reasoning 예시를 제공."
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#reinforcement-learning-from-ai-feedback",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#reinforcement-learning-from-ai-feedback",
+    "title": "RLAIF vs RLHF Review",
+    "section": "2.2 Reinforcement Learning from AI Feedback",
+    "text": "2.2 Reinforcement Learning from AI Feedback\n\n2.2.1 Canonical RLAIF\n\n이 실험에 맞춤형 RLAIF를 소개\nsoft labels(e.g. [0.6, 0.4])을 학습하기 위해 reward model(RM)이 생성한 점수의 softmax와 cross-entropy loss를 계산. softmax는 RM scores를 확률 분포로 변환한다. AI label의 데이터 셋으로 RM을 학습을 해서 model distillation의 일종으로 볼 수 있다.\nRM은 Appendix A.2, RL은 Appendix A.3\n\n\n\n2.2.2 Direct-RLAIF(D-RLAIF)\n\nRLAIF의 문제점은 policy가 학습될 수록 RM의 성능이 떨어지는 것이다. 보통 initial policy만을 가지고 RM을 학습하는데, policy가 학습되면 RM이 학습했던 데이터셋의 분포와 많이 멀어지게 된다. 이 해결책으로 새 policy로 RM을 학습하는 방법이 있지만 시간이 많이 든다.\n이 문제를 해결하기 위해 LLM feedback을 직접적으로 RL의 reward로 사용한다. off-the-shelf LLM이 생성된 responses의 점수를 매기고 추가적인 학습을 하지 않는다.\n\n\n\n\nFigure 4\n\n\n\n2.1처럼 prompt를 만들어 d-RLAIF에서 1~10까지 점수를 매기도록 하고, 각 score token(1~10)의 likelihood를 계산해 확률로 정규화한다. 그리고 가중치 평균 \\(s(y|x) = \\sum_{i=1}^{10} i P(i|y,x)\\)를 구하고 \\([-1,1]\\)로 정규화 해서 최종 score를 구한다. 이 score를 RM score를 대신해서 RL한다. (Appendix D)\n(메모) 논문에서 말하는 off-the-shelf나 general purpose LLM은 summarization, helpful, harmless 대화 생성에 특화 모델이 아니라는 것을 가정하는 듯. 이 논문에서는 summarization, helpful, harmless 대화 생성에 특화된 모델을 가지고 RLHF와 비교한다."
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#evaluation",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#evaluation",
+    "title": "RLAIF vs RLHF Review",
+    "section": "2.3 Evaluation",
+    "text": "2.3 Evaluation\n\n3가지 메트릭을 도입 : AI Labeler Alignment, Win Rate, Harmless Rate\nAI Labeler Alignment : AI-labeled preferences를 binary representation으로 변환해서(e.g. [0.6, 0.4] -&gt; [1, 0]) human preferences와 동일하면 1, 아니면 0. \\[\nz_{\\text{acc}} = \\frac{1}{D} \\sum_{i=1}^{D} \\mathbb{1}\n[\\underset{j}{\\text{argmax}}\\,P_{i,j}^{\\text{AI}} = p_i^{H}]\n\\]\n\\(D\\) : preference dataset의 size, \\(P^{AI} \\in \\mathbb{R}^{D\\times2}\\) : matrix of soft AI preferences, \\(p^H \\in \\mathbb{R}^D\\) : vector of human preferences\nWin Rate : 2개의 policies(responses)의 품질 측정, 어느 것을 더 선호하는지 체크. human annotator가 선택.\nHarmless Rate : Win Rate와 동일한 방법으로 harmless 체크."
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#datasets",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#datasets",
+    "title": "RLAIF vs RLHF Review",
+    "section": "3.1 Datasets",
+    "text": "3.1 Datasets\n\nReddit TL;DR, OpenAI’s Human Preferences, Anthropic Helpful and Harmless Human Preferences에서 사용한 datasets을 사용. (Appendix C)\nStanford Human Preferences dataset은 의미있는 효과를 보여주지 않음. (Appendix J)"
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#llm-labeling",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#llm-labeling",
+    "title": "RLAIF vs RLHF Review",
+    "section": "3.2 LLM Labeling",
+    "text": "3.2 LLM Labeling\n\nAI Labeling을 빨리하기 위해 각 데이터셋의 training split을 downsampling을 함. Summarization에서 human annotators가 높은 신뢰도로 선호도 체크한 것만 필터링. Downsampling과 Filtering 후 task별 3-4k만 남기고 AI labeling을 함.\nAI labeling으로 PaLM 2 Large를 사용. RL로 학습된 적이 없다고 함. (Appendix D)"
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#model-training",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#model-training",
+    "title": "RLAIF vs RLHF Review",
+    "section": "3.3 Model Training",
+    "text": "3.3 Model Training\n\n모든 SFT 모델은 PaLM 2 Extra-Small(XS)로 초기화(baseline, checkpoint로 사용). Summarization은 Reddit TL;DR dataset으로 fine-tuning을 한 모델을 사용. 그 외의 tasks는 task-specific fine-tuning 말고 instruction-tuned 변형을 사용.\n모든 RM은 PaLM 2 XS checkpoints가 baseline. AI preference와 human preference label을 포함한 모든 training split으로 fine-tuning을 함. (Appendix G)\n최근엔 PPO를 많이 사용하지만, 이 논문에서는 여전히 효과적인 REINFORCE (Williams, 1992)의 변형을 사용했다. Policy, value model은 SFT model로 초기화. Summarization의 초기 state는 Reddit TL;DR dataset의 training split. Helpful, harmless tasks의 초기 state는 preference dataset의 training split. (Appendix E, Appendix H)\nSummarization에서는 RL-trained policies에 생성된 responses에 간단한 post-processing 적용.\nAppendix F"
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#human-evaluation",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#human-evaluation",
+    "title": "RLAIF vs RLHF Review",
+    "section": "3.4 Human Evaluation",
+    "text": "3.4 Human Evaluation\n - Test dataset으로 RLAIF, RLHF, SFT 각각 response 생성해서 누가 이겼는지 사람이 측정. (Appendix I)"
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#rlaif-vs-rlhf",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#rlaif-vs-rlhf",
+    "title": "RLAIF vs RLHF Review",
+    "section": "4.1 RLAIF vs RLHF",
+    "text": "4.1 RLAIF vs RLHF\n\nRLAIF는 RLHF와 비슷하거나 더 나은 성능을 보임.\nRLAIF와 RLHF는 SFT보다 human evaluators가 더 선호했다.\nRLAIF는 Harmless task에서 가장 좋은 성능을 보임. \nLearning to summarize from human feedback 논문 처럼, RLAIF와 RLHF가 SFT에 비해 더 긴 responses를 생성했다. (메모 - DeepSeek-R1도 RL하니까 responses가 점점 길어졌다고 함) 길이가 human evaluation에게 편향을 일으킬 수 있지만, 길이를 제한한 사후 분석(post-hoc analysis)을 해봐도 RLAIF와 RLHF가 SFT를 이겼다. (Appendix J)\nHuman과 AI feedback을 결합해서 실험도 해봤지만 순수 Human feedback을 이기지 못했다. (Appendix K)\nRLAIF는 AI labeling으로 시간과 비용을 줄여주는 좋은 대체제다. (Appendix L)"
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#towards-self-improvement",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#towards-self-improvement",
+    "title": "RLAIF vs RLHF Review",
+    "section": "4.2 Towards Self-Improvement",
+    "text": "4.2 Towards Self-Improvement\n\n4.1은 PaLM 2 L로 AI Labeling. Self-Improvement를 실험하기 위해 동일한 크기의 모델(PaLM 2 XS)로도 실험 (Same-size RLAIF). 나머지 세팅은 4.1과 같음. 이 실험도 역시 human annotators가 필요한 SFT를 크게 이김.\n하지면 엄밀한 self-improvement는 아닌데, AI labeler로 instruction-tuned PaLM 2 XS를 사용했고, 초기 policy model은 Reddit TL;DR summarization으로 fine-tuning을 했기 때문이다."
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#d-rlaif",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#d-rlaif",
+    "title": "RLAIF vs RLHF Review",
+    "section": "4.3 D-RLAIF",
+    "text": "4.3 D-RLAIF\n\nd-RLAIF를 실험하기위해 instruction-tuned PaLM2 XS를 AI labeler로 사용.\nSummarization에서 D-RLAIF는 모델 크기를 동일하에 RLAIF를 60%로 이김. 이 부분은 AI labeler에게 preferences를 직접 물어 보는 점과 RLAIF의 RM에 preferences를 distilling하는 것이 성능이 안나오는(staleness) 것으로 추측.\nHelpful dialogue 생성에서는 SFT를 66%로 이겼는데, 정확히 같은 model checkpoint를 사용했기 때문에 LLM self-improvement의 엄격한 예시가 된다."
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#prompting-techniques",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#prompting-techniques",
+    "title": "RLAIF vs RLHF Review",
+    "section": "4.4 Prompting Techniques",
+    "text": "4.4 Prompting Techniques\n\n여기에 효과가 있다는 것은 AI labeler alignment가 좋아졌다는 뜻.\n(Table2) CoT reasoning을 이끌어 내는 것은 효과가 있는 편. few-shot과 자세한 preambles(서문)은 케이스 마다 다름.\n자세한 서문은 summarization에서 효과가 있었다(그 외 X). 그 이유는 summarization이 좀 더 복잡한 task이기 때문인 것으로 추측.\nCoT는 일반적으로 도움이 됨. Helpful, harmless 대화 생성에서는 “Base” preamble에서만 효과있었다.\n놀랍게도, in-context learning(few-shot prompts)은 harmless 대화 생성에만 효과가 있었다. 이에 대해서는 off-the-shelf AI labeler가 summarization과 helpful 대화 생성에 대해 이미 잘 알고 있어서 few-shot prompts가 방해된 것이라고 추측.\nSummarization에서 LLM labeler의 절대적인 성능(absolute terms)을 측정하기 위해 human annotator 간의 동의도를 비교. Stiennon et al. (2020)에서 Open AI의 동의율은 73~77%인데 off-the-shelf LLM은 78%로 절대적인 성능도 높다.\nSelf-consistency를 실험하기 위해 temperature T &gt; 0으로 CoT rationales를 샘플링 했지만 AI labeler alignment가 떨어졌다. (Appendix M)\n높은 AI labeler alignment가 RLAIF policies의 성능을 올린다. 엄격한 실험 필요. (Appendix N)"
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#size-of-llm-labeler",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#size-of-llm-labeler",
+    "title": "RLAIF vs RLHF Review",
+    "section": "4.5 Size of LLM Labeler",
+    "text": "4.5 Size of LLM Labeler\n\n모델 크기가 클수록 성능이 좋다. 작으면 성능이 안좋은 이유 중 하나는 2.1.1의 position bias가 있다. (Appendix B)"
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#a.-rlhf-preliminaries",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#a.-rlhf-preliminaries",
+    "title": "RLAIF vs RLHF Review",
+    "section": "A. RLHF Preliminaries",
+    "text": "A. RLHF Preliminaries\n\nA.1 Supervised Fine-tuning\n\n사전학습된 LLM은 downstream task를 위해 고품질의 labeled dataset으로 fine-tuing을 하는 것을 SFT라 한다. SFT 모델은 \\(\\pi^{\\text{SFT}}\\) (=policy)라 표현.\n\n\n\nA.2 Reward Modeling\n\ninput \\(x\\)로 하나 이상의 모델로 responses 쌍 \\((y_1,y_2) \\sim \\pi\\)을 구한다, \\(\\pi\\)는 SFT 모델이다. input과 responses는 annotators에게 어떤 기준으로 뭐를 더 선호하는지 매긴다. 그 결과 dataset of triplets \\(\\mathcal{D} = \\{(x,y_w,y_l)\\}\\)가 만들어지고, \\(y_w\\)는 선호, \\(y_l\\)은 비선호. Reward Model(RM) \\(r_\\phi\\)은 다음 loss를 감소하도록 학습된다. \\(\\sigma\\)는 sigmoid 함수 \\[\n\\mathcal{L}_r(\\phi) = \\underset{(x,y_w,y_l) \\sim \\mathcal{D}}{-\\mathbb{E}}\n\\left[\\text{log} \\, \\sigma(r_\\phi(x,y_w) - r_\\phi(x,y_l)) \\right]\n\\]\n위에서 만든 RM으로 모델의 responses에 rewards를 부여. 이 rewards로 RLAIF policy model을 RL한다.\n\n\n\nA.3. Reinforcement Learning\n\n\\(\\pi_{\\theta}^{\\text{RL}}\\)은 SFT 모델의 weights로 초기화하고 RM으로 부터 받은 reward를 최대화하는 RL을 한다.\nSFT policy \\(\\pi^{\\text{SFT}}\\)로 많이 멀어지는 것을 막기위해 KL divergence term \\(D_{\\text{KL}}\\)를 도입해서 \\(\\pi_{\\theta}^{\\text{RL}}\\)에 penalty를 줄 수 있다. (hyperparameter \\(\\beta\\)). 이 KL Loss는 “reward hacking”으로 불리는 저품질이거나 부자연스러운 언어인데 높은 reward를 받는 것을 방지한다.\nLoss function. \\(\\beta\\)는 0, 1사이. \\[\nJ(\\theta) = \\mathbb{E}_{y \\sim \\pi_{\\theta}(\\cdot | x)} \\Big[ (1 - \\beta) r_{\\phi}(y | x) - \\beta D_{KL} \\big( \\pi^{RL}_{\\theta} (y | x) \\,||\\, \\pi^{SFT} (y | x) \\big) \\Big]\n\\]"
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#b.-position-bias-in-llm-labelers",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#b.-position-bias-in-llm-labelers",
+    "title": "RLAIF vs RLHF Review",
+    "section": "B. Position Bias in LLM Labelers",
+    "text": "B. Position Bias in LLM Labelers\n\n같은 위치에 있는 text 측정 방법은 후보 A,B 순서, 후보 B,A 순서로 각각 inference 했을때 같은 위치에 있는 것을 선호하는 것으로 측정.\n작은 모델일 수록 Position Bias가 더 prevalent(만연한)하다. PaLM 2 L(18%), S(21%), XS(56%)가 같은 위치에 있는 text를 더 선호했다.\nPaLM 2 L의 경우 18%의 같은 위치에 선호하는 케이스 중 94%가 앞에 나온 후보를 선호했고, 그 외 작은 모델은 뒤에 나온 후보를 선호(각각 91%, 99%)했다."
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#c.-dataset-details",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#c.-dataset-details",
+    "title": "RLAIF vs RLHF Review",
+    "section": "C. Dataset Details",
+    "text": "C. Dataset Details\n\nsummarization : 고품질을 위해 필터링한 Reddit TL;DR dataset을 사용. 123k posts, 5%로 valid set. 추가로 OpenAI의 Reddit TL;DR dataset으로 부터 만들어진 human preference dataset을 사용. 92k pairwase 비교셋 존재.\nhelpful and harmless : Anthripic의 Helpful and Harmless preference dataset. 이 데이터는 human과 AI 간의 대화 및 선호도가 포함."
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#d.-llm-labeling-details",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#d.-llm-labeling-details",
+    "title": "RLAIF vs RLHF Review",
+    "section": "D. LLM Labeling Details",
+    "text": "D. LLM Labeling Details\n\nLLM labeling 설정\n\nmaximum input context length 4096\nCoT 생성 maximum decoding length 512, temperature T = 0.0.\nself-consistency 실험 : temperature T = 0.3 ~ 1.0, top-K = 40\n\nsummarization prompt\n\nYou are an expert summary rater. Given a TEXT (completed with a SUBREDDIT and a TITLE) and a SUMMARY, your role is to provide a SCORE from 1 to 10 that rates the quality of the SUMMARY given the TEXT, with 1 being awful and 10 being a perfect SUMMARY\", input Reddit Post, \"SUMMARY:\", summary to score, \"SCORE:\n\nhelpful task generation prompt\n\nYou are an expert rater of helpful and honest Assistant responses. Your role is to provide a SCORE from 1 to 10 that rates the helpfulness and honesty of the RESPONSE for a given CONTEXT. Where SCORE of 1 refers to useless and dishonest RESPONSE and a SCORE of 10 refers to a perfectly helpful and honest RESPONSE.\n\n위의 프롬프트 뒤에 conversation history and a response 추가\nPaLM2 사용"
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#e.-reinforce-for-language-models",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#e.-reinforce-for-language-models",
+    "title": "RLAIF vs RLHF Review",
+    "section": "E. REINFORCE for Language Models",
+    "text": "E. REINFORCE for Language Models"
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#f.-model-training-details",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#f.-model-training-details",
+    "title": "RLAIF vs RLHF Review",
+    "section": "F. Model Training Details",
+    "text": "F. Model Training Details\n\nsummarization을 위한 SFT model은 Reddit TL;DR dataset으로 학습. batch size 128로 한 epoch. Adafactor Optimizer \\(\\gamma = 10^{-5}\\). max input length 1024, max output length 128. helpful and harmless task에선 instruction tuned PaLM 2 XS를 SFT model로 사용.\nRM은 training loss와 accuracy curve가 평탄(plateau)해 질 때까지 학습. 보통 2-3 epochs에 나타남. Adafactor Optimizer \\(\\gamma = 10^{-5}\\), batch size 128 for summerization, 32 for others. max input length 1152, 1024 context tokens, 128 response. 정확도는 Appendix G.\nsummarization에서 AI feedback RM은 SFT model로 초기화. human feedback RM은 PaLM 2 XS로 초기화. (SFT 모델로 초기화하면 정확도가 낮았음). helpful and harmless dialog에서는 AI, human feedback RM 둘 다 PaLM 2 XS로 초기화\nRL 에선 SFT model을 시작 policy로 사용. \\(T = 0.9\\)로 샘플링. batch size 128, LR \\(\\gamma = 10^{-5}\\), 8 epochs. KL diverge loss에서 \\(\\beta = 0.05\\)\n최종 RL policy 선정은 valid prompts에서 높은 rewards를 받은 4개의 checkpoint 중 off-the-shelf LLM이 선정. RL checkpoints의 답변과 SFT policy 답변 중 누가 이겼는지 off-the-shelf가 판단. 또 여러 예제를 직접 보면서 checkpoint 선정."
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#g.-reward-model-accuracy",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#g.-reward-model-accuracy",
+    "title": "RLAIF vs RLHF Review",
+    "section": "G. Reward Model Accuracy",
+    "text": "G. Reward Model Accuracy\n\n학습된 RM의 정확도를 측정하기 위해 Pairwise Accuracy 도입. 입력과 한 쌍의 후보 응답이 주어졌을때 인간 레이블에 더 높은 점수를 부여하면 1, 아니면 0.\n인간 피드백으로 학습한 RM이 더 높은 정확도를 보이는데 자연스러움. 하지만 성능은 RLAIF가 RLHF과 비슷하거나 좋다는 점.\nAppendix N에서는 RM 정확도가 반드시 인간 선호도로 이어지지 않는다는 것을 보임.\n그래서 RM 정확도가 반드시 RM의 효과를 반영하고 있지 않음. RM이 효과가 있는지 확인하려면 인간 평가를 해야한다."
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#h.-post-rl-response-formatting",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#h.-post-rl-response-formatting",
+    "title": "RLAIF vs RLHF Review",
+    "section": "H. Post-RL Response Formatting",
+    "text": "H. Post-RL Response Formatting\n\n요약에서 응답 끝부분에 불필요한 마침표나 공백이 포함. (reward hacking 가능성)\n불필요한 기호는 프로그램적으로 제거."
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#i.-human-evaluation-details",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#i.-human-evaluation-details",
+    "title": "RLAIF vs RLHF Review",
+    "section": "I. Human Evaluation Details",
+    "text": "I. Human Evaluation Details\n\nHuman 평가를 위해 2,000개의 context-responses 쌍 생성. response는 SFT, RLAIF, RLHF policy가 각각 생성해서 총 6,000개. 평가자는 3명으로 총 18,000개 context-response-rating 튜플 생성.\n평가자들 사이에 일치도 파악을 위해 Kendall’s Coefficient of Concordance W 도입. 0은 불일치, 1은 일치. W 통계는 0.6 ~ 0.7로 적당히 일치함."
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#j.-controlling-for-response-length",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#j.-controlling-for-response-length",
+    "title": "RLAIF vs RLHF Review",
+    "section": "J. Controlling for Response Length",
+    "text": "J. Controlling for Response Length\n\n응답 길이가 평가에 영향을 줄 수 있기 때문에 통제를 하고 승률 측정.\n길이 보정을 구하는 방법은 policy A, B 각각의 요약 길이의 비율을 입력으로 A가 더 선호 되었는지의 이진 분류를 학습 후 예측.\nRLAIF와 RLHF가 SFT 대비 보정된 승률은 59%, 61%. 다른 작업에서도 비슷한 결과가 나온다."
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#k.-combining-human-and-ai-feedback",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#k.-combining-human-and-ai-feedback",
+    "title": "RLAIF vs RLHF Review",
+    "section": "K. Combining Human and AI Feedback",
+    "text": "K. Combining Human and AI Feedback\n\nRLHF + RLAIF는 RLHF 단독으로 학습하는 것을 이기지 못했다.\nRLAIF로 웜업하고 RLHF를 위해 refine 작업을 하는 curriculum learning을 적용해볼 수 있다."
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#l.-cost-of-llm-vs.-human-labeling",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#l.-cost-of-llm-vs.-human-labeling",
+    "title": "RLAIF vs RLHF Review",
+    "section": "L. Cost of LLM vs. Human Labeling",
+    "text": "L. Cost of LLM vs. Human Labeling\n\nLLM을 data annotator로 사용하는 것은 human annotators 보다 10배 싸다. 평균적으로 LLM은 예제당 $0.06 USD, human은 $0.67 USD가 든다."
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#m.-self-consistency",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#m.-self-consistency",
+    "title": "RLAIF vs RLHF Review",
+    "section": "M. Self-Consistency",
+    "text": "M. Self-Consistency\n\nself-consistency test를 위해 T &gt; 0을 실험했지만, T가 증가할수록 AI Labeler alignment는 떨어졌다. CoT rationales를 직접 확인해도 공통된 패턴을 확인할 수 없었다."
+  },
+  {
+    "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#n.-end-to-end-sensitivity-to-ai-labeler-alignment",
+    "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html#n.-end-to-end-sensitivity-to-ai-labeler-alignment",
+    "title": "RLAIF vs RLHF Review",
+    "section": "N. End-to-end Sensitivity to AI Labeler Alignment",
+    "text": "N. End-to-end Sensitivity to AI Labeler Alignment\n\nAI Labeler Alignment의 민감도를 평가하기 위해 Base 0-shot, Detailed CoT 0-shot으로 AI Labeling을 하고 RLAIF 학습을 진행. AI Labeler Alignment는 각각 76.1%, 78.0%.\n직접 비교 했을때 평가자(인간)은 59%의 비율로 Detailed CoT 0-shot을 선호. 이는 AI Labeler Alignment의 작은 향상이 최종 RL policy를 크게 개선 시킬수도 있음을 알려줌.\n하지만 연구는 제한적이라 추가 실험이 필요."
   }
 ]
