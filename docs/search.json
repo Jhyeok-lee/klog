@@ -7,167 +7,6 @@
     "text": "Boostcource Statistics 110의 10강을 듣고 정리. Linearity, Putnam problem, Negative Binomial, St. Petersburg paradox에 대해 설명한다.\n\nProof of linearlity\n문제) 확률변수 \\(T\\), \\(X\\), \\(Y\\)가 있고, \\(T = X + Y\\)일때, \\(E(T) = E(X) + E(Y)\\)를 보여라.\n즉, 기대값이 선형성을 만족하는지 증명\n\n\n\n\n\n\n\n\nFigure 1: Sample Space\n\n\n\n\n\n강의에선 표본 공간의 event를 조약돌로 비유한다. 각각의 조약돌은 어떤 확률로 특정 값에 매핑된다. 조약돌 표본 공간을 Discrete RV 그림으로 나타내면 위와 같다. 4개의 조약돌이 \\(X=0\\)로 매핑, 2개의 조약돌이 \\(X=1\\)로 매핑, 3개의 조약돌이 \\(X=2\\)로 매핑, 1개의 조약돌이 \\(X=3\\)으로 매핑된다. 위의 표본 공간에서 평균을 구하는 방법은 두 가지가 있다.\n\n각 확률변수 X마다 grouping을 해서 비율과 값을 곱해서 더한다. 즉, 가중평균을 구한다.\n값이 발생한 수(event, 조약돌의 값)를 다 더해서 전체 갯수로 나눈다.\n\n이 두 가지 방법을 식으로 나타내면 다음과 같다.\n\\[\nE(X) = \\sum_x xP(X=x) = \\sum_s X(s) P(\\{s\\}) \\quad(\\text{$P(\\{s\\})$ is mass of pebbles})\n\\]\n위 식의 \\(X(s)\\) : X는 확률변수 = 어떤 값으로 매핑하는 함수이고 어떤 조약돌 s를 어떤 값에 매핑한다. \\(P(\\{s\\})\\)는 조약돌의 질량. 여기서 각 조약돌은 1의 질량을 가진다. 각각의 방법으로 기대값을 구하는 과정은 다음과 같다.\n\n첫 번째 방법 : \\(0 \\cdot 4/10 + 1 \\cdot 2/10 + 2 \\cdot 3/10 + 3 \\cdot 10\\)\n두 번째 방법 : \\((0+0+0+0+1+1+2+2+2+3)/10\\)\n\n두 번째 방법을 사용하면 기대값의 선형성을 쉽게 증명할 수 있다.\n\\[\n\\begin{align}\nE(T) & = \\sum_s(X+Y)(s) \\cdot P(\\{s\\}) = \\sum_s(X(s)+Y(s)) \\cdot P(\\{s\\}) \\\\\n& = \\sum_sX(s)\\cdot P(\\{s\\}) \\; + \\sum_sY(s)\\cdot P(\\{s\\}) \\\\\n& = E(X) + E(Y)\n\\end{align}\n\\]\n같은방법으로 \\(E(cX) = cE(X)\\)도 증명할 수 있다.\n\n\nNegative Binomial Distribution\n음이항분포는 기하분포의 일반화된 형태이다. 음이항분포는 i.i.d \\(Bern(p)\\) trials의 sequence에서 r번째 성공까지 발생하는 실패 횟수를 나타내는 확률분포이다. 예를들어 1001001001 sequence에서 \\(r=4\\), 실패횟수 \\(n=6\\)이다. PMF \\(P(X=n)\\)은 \\(n\\)번 실패할 확률이다. PMF 식을 구하려면, \\(r-1\\)번 성공과 \\(n\\)번 실패의 combination + 마지막 \\(r\\)번째 성공으로 구할 수 있다.\n\\[\nP(X=n) = \\binom{n+r-1}{r-1} \\cdot p^r \\cdot (1-p)^n\n\\]\nPMF로 기대값 \\(E(X)\\)를 구하는 것은 어렵지만, 문제를 분해하면 간단해진다.\n\n\\(X_j\\)를 j-1번째 성공과 j번째 성공 사이의 실패 횟수로 정의\n각 \\(X_j\\)는 기하분포를 따름\n\n\\[\n\\begin{align}\nE(X) & = E(X_1 + X_2+ \\cdots + X_r) = E(X_1) + E(X_2) + \\cdots + E(X_r) \\\\\n& = r \\cdot q/p\n\\end{align}\n\\]\n\n\nFirst Success distribution\nFirst Success distribution은 첫 번째 성공이 나올 때까지의 시행 횟수(성공 포함)를 나타낸다. 이를 확률 변수 \\(X\\)로 정의하면, \\(X \\sim FS(p)\\)이며 \\(p\\)는 성공 확률이다. \\(X\\)는 성공을 포함한 시도 횟수를 나타내므로, \\(X\\)를 기하 분포 \\(Y \\sim Geom(p)\\), \\(X = Y+1\\)로 표현할 수 있다. 기하 분포 \\(Y \\sim Geom(p)\\)은 성공을 제외한 실패 횟수를 나타내고, \\(X\\)를 \\(Y\\)에 성공 시도를 더한 것으로 표현한다.\n\\(E(Y)=(1-p)/p\\)이고, 선형성을 이용하면\n\\[\nE(X) = E(Y) + 1 = (1-p)/p + 1 = 1/p\n\\]\n이는 성공할 확률이 \\(1/10\\)이라면, 평균적으로 10번 시도하면 성공한다\n\nGemetric Distribution은 책마다 정의가 다르다. (성공을 포함하는 지, 안하는 지)\n\n\n\n2006년 Putnam Competition A4 문제\nPutnam 경시대회는 매우 어려운 수학시험이고, 대부분 0점이라고 한다.\n1~n개 숫자의 무작위 순열에서 local maxima의 개수에 대한 기댓값을 구하는 문제.\n(3) 2 1 4 (7) 5 (6) - 주변보다 큰 수를 local maxima라 하고 여기서 3, 7, 6으로 3개이다.\n\nindicator RV \\(I_j\\) 를 사용, \\(j\\) 위치가 local maxima이면 \\(I_j=1\\), 아니면 \\(I_j=0\\)\n\\(I_1+\\cdots+I_n\\)이 local maxima의 개수, \\(E(I_1+\\cdots+I_n)\\)를 구하는 것이 목표\n중간의 3개의 수 “4 7 5”에서 local maxima가 존재할 확률 = \\(1/3\\), \\(n-2\\)개 존재\n끝 위치의 수 “3 2”에서 local maxima가 존재할 확률 = \\(1/2\\), \\(2\\)개 존재\n\n선형성을 이용하면,\n\\[\nE(I_1+\\cdots+I_n) = E(I_1)+\\cdots+E(I_n) = \\frac{n-2}{3} + \\frac{2}{2} = \\frac{n+1}{3}\n\\]\nindicator RV의 기댓값은 사건의 확률과 같다.\n\n\n상트페테르부르크 역설(St. Petersburg Paradox)\n첫 앞면이 나올 때까지의 동전 던지기 횟수를 \\(x\\)라 할 때, \\(2^x\\) 달러를 받는 게임의 기댓값 구하기.\n\\[\nE(Y) = \\sum_{k=1}^{\\infty}2^k \\cdot \\frac{1}{2^k} = \\infty\n\\]\n이론적으로는 무한한 기대값을 가지지만, 현실적인 제약으로 1조 달러(\\(2^{40}\\)) 상한이 있다면, \\(E(Y) = \\sum_{k=1}^{40} 1 = 40\\)처럼 유한한 값을 가진다.\n\n\n참고\nhttps://en.wikipedia.org/wiki/Event_(probability_theory) https://en.wikipedia.org/wiki/Negative_binomial_distribution https://en.wikipedia.org/wiki/Geometric_distribution https://en.wikipedia.org/wiki/St._Petersburg_paradox"
   },
   {
-    "objectID": "posts/deepseek_r1/deepseek_r1.html",
-    "href": "posts/deepseek_r1/deepseek_r1.html",
-    "title": "DeepSeek-R1 Paper Review",
-    "section": "",
-    "text": "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning https://arxiv.org/pdf/2501.12948"
-  },
-  {
-    "objectID": "posts/deepseek_r1/deepseek_r1.html#contributions",
-    "href": "posts/deepseek_r1/deepseek_r1.html#contributions",
-    "title": "DeepSeek-R1 Paper Review",
-    "section": "1.1 Contributions",
-    "text": "1.1 Contributions\nPost-Training: Large-Scale Reinforcement Learning on the Base Model\n\nDeepSeek-R1-Zero는 SFT 없이 RL 만으로 복잡한 문제에 대해 chain-of-thought(CoT)를 진행함. 모델은 self-verification, reflection, generating long CoTs를 설명한다. LLM이 pure RL로도 reasoning capabilities가 강화되는 것을 보여준다.\nReasoning pattern을 강화하고 human preferences를 조절하는 것을 목표로 하는 2번의 RL, 모델의 reasoning and non-reasoning capabilities 역할을 추가하는 2번의 SFT pipline을 소개.\n\nDistillation: Smaller Models Can be Powerful Too\n\n큰 reasoning model에서 작은 model로 distillation을 하는 것은 작은 model이 RL 하는 것보다 성능이 좋다.\nDeepSeek-R1으로 생성한 reasoning data로 널리 사용되는 model을 fine-tune 했다."
-  },
-  {
-    "objectID": "posts/deepseek_r1/deepseek_r1.html#overview",
-    "href": "posts/deepseek_r1/deepseek_r1.html#overview",
-    "title": "DeepSeek-R1 Paper Review",
-    "section": "2.1 Overview",
-    "text": "2.1 Overview\n\nDeepSeek-R1-Zero : RL만 사용해서 reasoning capabilities 상승\nDeepSeek-R1 : 작은 cold-start data(long Chain-of-Thought)와 RL로 성능 더 상승\nDistill the reasoning capability from DeepSeek-R1 to small dense models"
-  },
-  {
-    "objectID": "posts/deepseek_r1/deepseek_r1.html#deepseek-r1-zero-reinforcement-learning-on-the-base-model",
-    "href": "posts/deepseek_r1/deepseek_r1.html#deepseek-r1-zero-reinforcement-learning-on-the-base-model",
-    "title": "DeepSeek-R1 Paper Review",
-    "section": "2.2 DeepSeek-R1-Zero: Reinforcement Learning on the Base Model",
-    "text": "2.2 DeepSeek-R1-Zero: Reinforcement Learning on the Base Model\n\n2.2.1 Reinforcement Learning Algorithm\nGRPO (Group Relative Policy Optimization)\n\nTraining cost를 절약하기 위해 policy model의 크기와 동일한 critic model을 포기하고 group scores를 측정하는 GRPO를 도입.\n질문 \\(q\\)에 대해 GRPO는 old policy \\(\\pi_{\\theta_\\text{OLD}}\\)의 outputs \\(\\{o_1, o_2, \\cdots, o_G\\}\\)를 구하고 다음의 objective function을 최대화를 해서 policy model \\(\\pi_\\theta\\)를 최적화한다. \\[\n\\mathcal{J}_{\\text{GRPO}}\n= \\mathbb{E}[q \\sim P(Q), \\{o_i\\}_{i=1}^{G} \\sim \\pi_{\\theta_\\text{OLD}}(O|q)]\n\\] \\[\n\\frac{1}{G} \\sum_{i=1}^G\n\\left(\n\\text{min} \\left(\n  \\frac{\\pi_\\theta(o_i|q)}{\\pi_{\\text{old}}(o_i|q)}A_i,\n  \\text{clip} \\left(\\frac{\\pi_\\theta(o_i|q)}{\\pi_{\\text{old}}(o_i|q)}, 1-\\epsilon, 1+\\epsilon \\right) A_i\n\\right) - \\beta \\; \\mathbb{D}_{KL}(\\pi_\\theta || \\pi_{ref})\n\\right)\n\\] \\[\n\\mathbb{D}_{KL}(\\pi_\\theta || \\pi_{ref}) =\n\\frac{\\pi_{ref}(o_i|q)}{\\pi_\\theta(o_i|q)} -\n\\text{log} \\frac{\\pi_{ref}(o_i|q)}{\\pi_\\theta(o_i|q)} - 1\n\\]\n\\(\\epsilon\\)과 \\(\\beta\\)는 hyper-parameters\n\\(A_i\\)는 a group of rewards \\(\\{r_1, r_2, \\cdots, r_G\\}\\)로 계산한 advantage \\[\nA_i = \\frac{r_i - \\text{mean}(\\{r_1, r_2, \\cdots, r_G\\})}\n{\\text{std}(\\{r_1, r_2, \\cdots, r_G\\})}\n\\]\n\n\n\n2.2.2 Reward Modeling\n\nreward는 RL의 최적화 방향을 결정\nDeepSeek-R1-Zero는 2가지 rule-based reward system을 구성\nAccuracy rewards : response가 맞는지 체크. 수학 문제의 경우 특정 박스 안에 출력해서 답 비교, LeetCode 문제의 경우 test cases를 가지고 피드백을 생성가능. (compiler도 사용)\nFormat rewards : &lt;think&gt;, &lt;/think&gt; tag 사이에 생각을 하도록 강제하는 reward model도 사용\n메모) SFT의 경우 답변 스크립트를 모두 작성하는 것을 기준으로 한듯. RL은 마지막 최종 답(수학, 코딩문제)를 비교해서 맞으면 reward.\noutcome reward model를 추가적으로 사용하지 않음. (비용 등 문제)\n\n\n\n2.2.3 Training Template\n\nprompt = \"\"\"\nA conversation between User and Assistant. The user asks a question, and the Assistant solves it. The assistant first thinks about the reasoning process in the mind and then provides the user with the answer. The reasoning process and answer are enclosed within &lt;think&gt; &lt;/think&gt; and &lt;answer&gt; &lt;/answer&gt; tags, respectively, i.e., &lt;think&gt; reasoning process here &lt;/think&gt; &lt;answer&gt; answer here &lt;/answer&gt;.\nUser: prompt.\nAssistant:\n\"\"\"\n\n\n위와 같은 template로 reasoning process를 생성하고 최종 답을 내놓는다.\n이 구조적 제약은 content-specific bias(reflective reasoning - 반성적 추론을 강제하거나 특정 문제 해결 전략을 promoting 하거나 등)를 피하고 자연스러운 추론을 관찰하기 위해 추가.\n메모) 알고리즘 문제 테스트했을때 DP만 계속 생각하더라\n\n\n\n2.2.4 Perpformance, Self-evolution Process and Aha Moment of DeepSeek-R1-Zero\nPerformance of DeepSeek-R1-Zero\n\nRL만으로 AIME 2024 pass@1 score는 15.6% -&gt; 71.0%로 급격한 상승을 보여줌. o1-0912(74.4%)에 근접해짐.\n\nSelf-evolution Process of DeepSeek-R1-Zero\n\nRL로 학습하면 할 수록 response의 길이가 점점 증가한다 -&gt; 자연스럽게 thinking time을 늘린다. (스스로 진화)\n또한 명시적으로 프로그래밍을 하지 않아도 reflection(심사숙고, model이 전단계를 다시 평가하는 것)과 다른 방법을 찾아보는 것이 생겨남.\n\nAha Moment of DeepSeek-R1-Zero\n\n모델 학습 중간 버전에서 “aha moment”가 나타남. 이 순간 DeepSeek-R1-Zero는 생각할 시간을 가지고 앞서 내놓았던 방법을 재평가 한다. 이 행동은 reasoning 능력이 자라나고 있다는 것 뿐만 아니라 RL이 예상치 못한 정교한 결과를 이끄는 것을 보여준다.\n모델에 명시적으로 문제를 푸는 방법을 가르치는 것 보다 적절한 인센티브를 주면 자율적으로 문제 해결 전략을 배운다.\n\nDrawback of DeepSeek-R1-Zero\n\n강력한 추론 능력을 보이고 자체적으로 이 능력을 개발하지만 가독성 문제와 언어 섞임 문제가 있다."
-  },
-  {
-    "objectID": "posts/deepseek_r1/deepseek_r1.html#deepseek-r1-reinforcement-learning-with-cold-start",
-    "href": "posts/deepseek_r1/deepseek_r1.html#deepseek-r1-reinforcement-learning-with-cold-start",
-    "title": "DeepSeek-R1 Paper Review",
-    "section": "2.3 DeepSeek-R1: Reinforcement Learning with Cold Start",
-    "text": "2.3 DeepSeek-R1: Reinforcement Learning with Cold Start\n두가지 의문점 - 소량의 고품질 데이터로 cold start를 사용하면 성능이 더 오를까? - 명확하고 일관된 CoT를 생성하고 강력한 일반적인 역량(general capabilities)을 보려주려면 어떻게 user-friendly model을 학습시킬까? - 메모) DeepSeek-R1은 OpenAI의 o1으로 distillation 했다는 것이 강하게 의심됨. SFT 데이터는 o1으로 만들었을 가능성이 높음.\n\n2.3.1 Cold Start\n\n불안정한 RL cold start을 막기위해 DeepSeek-R1에서는 fine-tuning 용 긴 CoT data을 수집해 초기 RL actor를 만든다.\n데이터 수집 방법 : long CoT를 가진 few-shot prompting, reflection과 verification을 생성하도록 요구하는 prompting, DeepSeek-R1-Zero outputs을 읽을 수 있는 포맷으로 만들기, human annotators로 결과를 후처리\n이 방법으로 수천 개의 데이터를 수집하고 DeepSeek-V3-Base를 fine-tuning, RL의 시작점.\n장점1, 가독성 : cold-start data를 만들때 response 끝에 요약을 추가한 가독성 있는 패턴을 설계, 어색한 response는 필터링. output format을 |special_token|&lt;reasoning_process&gt;|special_token|&lt;summary&gt;,로 정의.\n장점2, 잠재성 : 인간의 사전 지식으로 신중하게 패턴을 설계해서 DeepSeek-R1-Zero를 이김. Reasoning model은 반복학습이 더 효과적임.\n\n\n\n2.3.2 Reasoning-oriented Reinforcement Learning\n\nDeepSeek-V3-Base를 cold-start data로 fine-tuning 후 DeepSeek-R1-Zero 처럼 RL 수행. 잘 정의된 문제와 답(코딩, 수학, 과학, 논리 추론)과 같은 reasoning-intensive tasks를 학습해서 추론 능력을 향상시키는데 집중.\nRL prompts에 여러 언어가 있을 경우 학습 중에 CoT에서 언어 섞임 문제를 발견. 이를 완화하려고 CoT에서 target language의 proportion으로 language consistency reward를 도입. 이런 조정이 다소 모델 성능을 떨어뜨리지만 가독성을 높임.\nreasoning task의 정확도와 language consistency reward를 더해서 최종 reward를 만듬. 그리고 수렴할때까지 학습.\n\n\n\n2.3.3 Rejection Sampling and Supervised Find-Tuning\n\n앞의 RL가 수렴하면 이 checkpoint를 가지고 SFT 데이터를 모은다.\n이 단계에서는 일반적인 task를 강화하기 위한 데이터를 추가한다.\n\nReasoning data\n\nReasoning prompts를 만들고 앞에서 만든 RL checkpoint 모델의 outputs을 rejection sampling을 했다.\n이 단계에선 추가적인 데이터가 있음. 여기서 데이터셋을 확장하는데, 일부는 DeepSeek-V3에 정답(ground-truth)과 모델 예측을 입력해 DeppSeek-V3의 판단을 reward로 사용. (generative reward model, 개인적으로 이 ground-truth가 OpenAI o1의 response라고 생각한다.)\n읽기 어려운 output은 제외. 각 prompt마다 옳은 response만 유지. 600K training samples를 모음.\n\nNon-Reasoning data\n\nDeepSeek-V3의 SFT dataset의 부분을 재사용. 어떤 non-reasoning data에 대해 DeepSeek-V3에 prompting으로 CoT response 요구. 여기서 200K training samples를 모음.\n\n여기서 모은 800K samples로 DeepSeek-V3-Base를 2 epoch로 fine-tuning함.\n\n\n2.3.4 Reinforcement Learning for all Scenarios\n\nreward의 조합과 다양한 프롬프트 분포를 사용해 RL -&gt; helpfulness, harmlessness, reasoning capabilities\nReasoning data는 DeepSeek-R1-Zero 처럼, 일반적인 data는 human preferences를 캐치하도록 DeepSeek-V3 처럼 preference pairs로 학습.\nhelpfulness를 위해 summary에 집중. reasoning process를 방해를 최소화하기 위해 response와 user 사이 관련성, 효용성 집중.\nharmlessness를 위해 reasoning process와 summary를 포함한 모든 response를 평가.\n궁극적으로 reward 조합과 데이터 분포의 다양함은 도움됨."
-  },
-  {
-    "objectID": "posts/deepseek_r1/deepseek_r1.html#distilation-empower-small-models-with-reasoning-capability",
-    "href": "posts/deepseek_r1/deepseek_r1.html#distilation-empower-small-models-with-reasoning-capability",
-    "title": "DeepSeek-R1 Paper Review",
-    "section": "2.4 Distilation: Empower Small Models with Reasoning Capability",
-    "text": "2.4 Distilation: Empower Small Models with Reasoning Capability\n\nDeepSeek-R1의 800k samples를 가지고 Qwen, Llama를 SFT만(RL 없이) 해도 reasoning abilities를 향상시킴."
-  },
-  {
-    "objectID": "posts/deepseek_r1/deepseek_r1.html#deepseek-r1-evaluation",
-    "href": "posts/deepseek_r1/deepseek_r1.html#deepseek-r1-evaluation",
-    "title": "DeepSeek-R1 Paper Review",
-    "section": "3.1 DeepSeek-R1 Evaluation",
-    "text": "3.1 DeepSeek-R1 Evaluation\n\n여러가지 Benchmarks에서 좋아졌다."
-  },
-  {
-    "objectID": "posts/deepseek_r1/deepseek_r1.html#distilled-model-evaluation",
-    "href": "posts/deepseek_r1/deepseek_r1.html#distilled-model-evaluation",
-    "title": "DeepSeek-R1 Paper Review",
-    "section": "3.2 Distilled Model Evaluation",
-    "text": "3.2 Distilled Model Evaluation\n\nDilstilled 7B는 GPT-4o-0513 이김. Distilled 14B는 Qwwq-32B-preview 이김. Dilstilled 32B, 70B는 o1-mini 이김.\n이 distilled model에 추가적인 RL을 적용하면 성능이 더 올라간다. 추가 실험 필요해서 SFT한 결과만 남긴다."
-  },
-  {
-    "objectID": "posts/deepseek_r1/deepseek_r1.html#distilation-vs-reinforcement-learning",
-    "href": "posts/deepseek_r1/deepseek_r1.html#distilation-vs-reinforcement-learning",
-    "title": "DeepSeek-R1 Paper Review",
-    "section": "4.1 Distilation vs Reinforcement Learning",
-    "text": "4.1 Distilation vs Reinforcement Learning\n\ndistilation 없이 RL만 한 것은 distilation만 한 것보다 성능이 낮다.\n강력한 모델로 작은 모델에 distilation 하는 것이 가장 좋은 결과를 얻었다. 작은 모델을 large-scale RL을 한 것은 큰 연산을 요구하나 distilation 성능보다 낮다.\ndistilation은 경제적이고 효과적이나, 지식의 한계점을 돌파하려면 더 강력한 base model과 더 큰 scale의 RL이 필요하다."
-  },
-  {
-    "objectID": "posts/deepseek_r1/deepseek_r1.html#unsuccessful-attempts",
-    "href": "posts/deepseek_r1/deepseek_r1.html#unsuccessful-attempts",
-    "title": "DeepSeek-R1 Paper Review",
-    "section": "4.2 Unsuccessful Attempts",
-    "text": "4.2 Unsuccessful Attempts\n시도했으나 실패한 것. 이 방법으로 불가능하다는 뜻이 아님.\nProcess Reward Model (PRM)\n\n현실적으로 세 가지 이유 때문에 힘듬. 1) 일반적인 reasoning에서 세밀한 단계를 정의하는 것, 2) 중간 단계가 맞는지 체크, 3) Reward Hacking 가능하고 재학습이 어려움.\nPRM은 top-N responses를 재정렬하거나 guided search에서 도움이 됨.\n\nMonte Carlo Tree Search (MCTS)\n\n특정한 reasoning 단계를 검색하기 위해 여러 태그를 생성. 학습을 위해 pre-trained value model에 의한 MCTS로 수집된 prompts의 답을 생성. 그리고 actor, value model을 학습.\nchess랑 다르게 token generation은 search space가 더 크다. node 확장 수를 제한하니까 local optima에 갖힘.\nfine-grained value model을 학습시키는 것은 어려움 -&gt; search process에 영향"
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "About this blog"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Knowledge Log",
-    "section": "",
-    "text": "RLAIF vs RLHF Review\n\n\n\n\n\n\nLLM\n\n\n\n\n\n\n\n\n\nMay 8, 2025\n\n\nJaehyeok Lee\n\n\n\n\n\n\n\n\n\n\n\n\nMCS SQL Paper Review\n\n\n\n\n\n\nLLM\n\n\n\n\n\n\n\n\n\nMar 19, 2025\n\n\nJaehyeok Lee\n\n\n\n\n\n\n\n\n\n\n\n\nXiyan SQL Paper Review\n\n\n\n\n\n\nLLM\n\n\n\n\n\n\n\n\n\nMar 12, 2025\n\n\nJaehyeok Lee\n\n\n\n\n\n\n\n\n\n\n\n\nDeepSeek-R1 Paper Review\n\n\n\n\n\n\nLLM\n\n\n\n\n\n\n\n\n\nFeb 22, 2025\n\n\nJaehyeok Lee\n\n\n\n\n\n\n\n\n\n\n\n\n(Statistics110) 10. Expectation Continued\n\n\n\n\n\n\nstatistics110\n\n\n\n\n\n\n\n\n\nDec 29, 2024\n\n\nJaehyeok Lee\n\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "posts/xiyan_sql/xiyan_sql.html",
-    "href": "posts/xiyan_sql/xiyan_sql.html",
-    "title": "Xiyan SQL Paper Review",
-    "section": "",
-    "text": "A Preview of XiYan-SQL: A Multi-Generator Ensemble Framework for Text-to-SQL https://arxiv.org/pdf/2411.08599"
-  },
-  {
-    "objectID": "posts/xiyan_sql/xiyan_sql.html#fine-tuned-sql-generator",
-    "href": "posts/xiyan_sql/xiyan_sql.html#fine-tuned-sql-generator",
-    "title": "Xiyan SQL Paper Review",
-    "section": "5.1 Fine-tuned SQL Generator",
-    "text": "5.1 Fine-tuned SQL Generator\n\n핵심 목표는 정밀하고 다양한 SQL 후보들을 생성하는 것.\n\nBasic-syntax training\n\n사전 학습된 모델을 기본적인 SQL 패턴과 문법에 특화하도록 SFT. SQL dialect-agnostic 데이터(수 만개)를 학습해서 포괄적으로 문법을 커버.\n\nGeneration-enhance training\n\n모델의 semantic 이해와 문법 스타일 선호도 향상을 목표로 SFT.\nmulti-task data를 학습해서 유저의 질문과 SQL 쿼리간의 관계를 더 잘 이해.\n\n유저의 질문을 SQL 쿼리로 변환하는 일반적인 task.\nSQL 쿼리를 유저의 질문으로도 변환해서 잠재적인 질문도 추론 할 수 있도록 설계.\nSQL을 주어지고 evidence 후보 중 가장 관련있는 evidence를 선택. evidence = DB 스키마와 관련 contextual information 전체\nSQL 식별 및 재생성 tasks. execution feedback으로 최적화용.\n\nn개의 LLM을 활용해 원래 쿼리의 의미를 바꾸지 않고 여러 가지 방식으로 재구성. 그래서 샘플 데이터를 여러 문법 스타일을 가진 쿼리로 확장할 수 있었음. 이 데이터로 SFT.\n이 방법으로 모델 하나에 하나의 SQL dialect를 타겟할 수도 있고, 여러 SQL dialect를 커버 하도록 학습할 수 있다. 응용에 따라 다름."
-  },
-  {
-    "objectID": "posts/xiyan_sql/xiyan_sql.html#icl-sql-generator",
-    "href": "posts/xiyan_sql/xiyan_sql.html#icl-sql-generator",
-    "title": "Xiyan SQL Paper Review",
-    "section": "5.2 ICL SQL Generator",
-    "text": "5.2 ICL SQL Generator\n\nICL에서는 적절한 examples을 prompt에 추가하는 것이 좋다. (SQL examples)\n유저의 질문(여기서는 test set)과 training set의 질문과 skeleton similarity를 계산해서 example selection을 한다. 개체명은 NLTK를 사용해 special token으로 마스킹을 한다. 예를들어 “America”, “China”를 “&lt;country&gt;”로 마스킹. 열거형 값 같은 것들은 컬럼 이름으로 대체. 이 방법은 개체에 너무 집중하는 것을 방지하고 유사한 질문 구조를 가진 예시를 더 잘 찾는다. training과 test sets의 마스킹한 질문을 embedding을 계산, 그리고 similarity를 계산해서 top-K의 examples를 training set에서 선택.\n하나의 테이블만 참조하는 SQL example은 여러 테이블을 참조하는 SQL generation에 도움 안되는 것을 확인. 그래서 schema linking으로 여러 테이블을 사용해야 한다면 여러 테이블을 사용하는 SQL examples만 선택.\nsimilarity threshold로 질문당 최대 5개의 examples를 선택했다.\nBird, Spider와 같은 벤치마크의 train set과 test set의 DB는 중복되지 않아서 prompt에 schema를 포함하는 것이 도움이 됨. 선택된 SQL example의 테이블에서 최소한의 컬럼만 제공."
-  },
-  {
-    "objectID": "posts/xiyan_sql/xiyan_sql.html#sql-refiner",
-    "href": "posts/xiyan_sql/xiyan_sql.html#sql-refiner",
-    "title": "Xiyan SQL Paper Review",
-    "section": "5.3 SQL Refiner",
-    "text": "5.3 SQL Refiner\n\n생성된 후보 SQL은 logical이나 syntactical errors를 필연적으로 가진다. 그래서 schema-related context를 가지고 생성된 SQL 쿼리와 실행 결과를 가지고 교정(생성)을 한번 더 한다.\n원래 SQL과 교정된 SQL 둘 다 selection model에 제출될 수 있다.\n(메모) 논문에는 ChatGPT와 같은 LLM을 사용했다는 말이 없지만 ChatGPT를 사용한 것 같음."
-  },
-  {
-    "objectID": "posts/mcs_sql/mcs_sql.html",
-    "href": "posts/mcs_sql/mcs_sql.html",
-    "title": "MCS SQL Paper Review",
-    "section": "",
-    "text": "MCS-SQL, Leveraging Multiple Prompts and Multiple-Choice Selection For Text-to-SQL Generation https://arxiv.org/pdf/2405.07467"
-  },
-  {
-    "objectID": "posts/mcs_sql/mcs_sql.html#schema-linking",
-    "href": "posts/mcs_sql/mcs_sql.html#schema-linking",
-    "title": "MCS SQL Paper Review",
-    "section": "3.1 Schema Linking",
-    "text": "3.1 Schema Linking\n\nSchema Linking으로 text-to-sql 성능이 많이 오름.\nhigh recall을 목표로 여러 프롬프트를 도입.\n\n\n3.1.1 Table Linking\n\nLLM에게 테이블 선택 + 왜 필요한지(CoT) 물음.\nJSON 포맷으로 응답하도록 설정\n\n### For a given DB schema and question,\nextract the list of tables required\nto write the SQL query.\n### DB schema: ...\n### Question: ...\n\nYour answer should be in the json format\n:\n{\n\"reasoning\": \"...\" # The reason for\nselecting each table.\n\"answer\": [...] # List of selected\ntables.\n}\n### Your answer:\n\n테이블과 컬럼 순서에 따라 결과가 달랐음. 이 영향을 최소화하기 위해 테이블 순서를 셔플해서 \\(p_t\\)개의 distinct prompts 생성. 각 prompt마다 n개 응답 생성(높은 sampling temperature 사용). n개의 응답을 union. 그 이유는 필요없는 테이블은 뒤의 프로세스에서 큰 영향이 없지만 필요한 테이블이 없는 것은 영향이 크기 때문.\n\nB.1.1 Prompt for Table Linking\n### Given a database schema, question, and knowledge evidence, extract a list of\ntables that should be referenced to convert the question into SQL.\n### SQLite SQL tables, with their properties:\n# molecule ( molecule_id, label )\n# connected ( atom_id, atom_id2, bond_id )\n# bond ( bond_id, molecule_id, bond_type )\n# atom ( atom_id, molecule_id, element )\n#\n# atom.molecule_id = molecule.molecule_id\n# bond.molecule_id = molecule.molecule_id\n# connected.bond_id = bond.bond_id\n# connected.atom_id2 = atom.atom_id\n# connected.atom_id = atom.atom_id\n### Question: Among all chemical compounds identified in the database, what percent\nof compounds form a triple-bond.\n### Knowledge Evidence: triple bond refers to bond_type = ’#’;\nYou need to not only select the required tables, but also explain in detail why each\ntable is needed.\nYour answer should strictly follow the following json format.\n{\n\"reasoning\": \"\", // The reason for choosing each table.\n\"tables\": [], // List of selected tables.\n}\n### Your Answer:\n\n\n3.1.2 Column Linking\n\n앞에서 Table Linking의 결과 테이블만 써서 column linking. prompt도 비슷.\n같은 컬럼 이름이 존재할 수 있어서 [table_name].[column_name] 포맷으로 응답하게 함.\n역시 테이블, 컬럼 순서 셔플해서 prompt \\(p_c\\)개 생성하고 n개 응답 생성 후 union.\nSQL Generation에서는 Table, Column Linking 결과만을 제시.\n\nB.1.2 Prompt for Column Linking\n### Given a database schema, question, and knowledge evidence, extract a list of\ncolumns that should be referenced to convert the question into SQL.\n### SQLite SQL tables, with their properties:\n# molecule ( molecule_id, label )\n# bond ( bond_id, molecule_id, bond_type )\n#\n# bond.molecule_id = molecule.molecule_id\n### Question: Among all chemical compounds identified in the database, what percent\nof compounds form a triple-bond.\n### Knowledge Evidence: triple bond refers to bond_type = ’#’;\nYou need to not only select the required columns, but also explain in detail why\neach column is needed.\nYour answer should strictly follow the following json format.\n{{\n\"reasoning\": \"\", // The reason for choosing each column.\n\"columns\": [\"table_name_i.column_name_j\", ...], // List of selected columns\n}}\n### Your Answer:"
-  },
-  {
-    "objectID": "posts/mcs_sql/mcs_sql.html#multiple-sql-generation",
-    "href": "posts/mcs_sql/mcs_sql.html#multiple-sql-generation",
-    "title": "MCS SQL Paper Review",
-    "section": "3.2 Multiple SQL Generation",
-    "text": "3.2 Multiple SQL Generation\n\nSQL generation 역시 다양한 prompt로 생성.\nfew-shot examples을 선택과 순서를 다양하게 해서 prompt를 생성.\n\n\n3.2.1 Few-Shot Examples Selection\n\n하나의 test sample에 대해 training dataset에서 few-shot examples가 선택된다.\n여러 prompts를 만들기 위해 두 가지 전략 사용: question similarity, masked question similarity.\nquestion similarity : test 질문과 가장 가까운 training 질문 top-k개 선택 (sentence embedding)\nquestion에서 DB Schema에 특화된 tokens를 마스킹. 이 방법은 특정 도메인과 관계없이 비슷한 질문을 찾는 데 도움을 줌. LLM을 사용해서 DB Schema와 질문에서 테이블 이름, 컬럼 이름, 값을 special tokens으로 대체.\n위 두 가지 방법으로 \\(p_q\\) 개의 prompts를 만드는데, 하나는 오직 question similarity, 다른 것은 masked similarity, 나머지는 두 가지를 합쳐서 다양한 순서로 만듬.\n\nB.2 Prompt for Question Masking\n### Given a DB schema and a question, mask the table name, column name, and values\nin the question.\n\n&lt;example1&gt;\n### SQLite SQL tables, with their properties:\n# customers ( CustomerID: integer, Segment: text, Currency: text )\n# gasstations ( GasStationID: integer, ChainID: integer, Country: text, Segment:\ntext )\n# products ( ProductID: integer, Description: text )\n# transactions_1k ( TransactionID: integer, Date: date, Time: text, CustomerID:\ninteger, CardID: integer, GasStationID: integer, ProductID: integer, Amount:\ninteger, Price: real )\n# yearmonth ( CustomerID: integer, Date: text, Consumption: real )\n### Question: For all the people who paid more than 29.00 per unit of product id No\n.5. Give their consumption status in the August of 2012.\n### Masked Question: For all the [TABLE] who paid more than [VALUE] per unit of [\nCOLUMN] [VALUE]. Give their consumption status in the [VALUE].\n&lt;/example1&gt;\n\n&lt;example2&gt;\n### SQLite SQL tables, with their properties:\n# customers ( CustomerID: integer, Segment: text, Currency: text )\n# gasstations ( GasStationID: integer, ChainID: integer, Country: text, Segment:\ntext )\n# products ( ProductID: integer, Description: text )\n# transactions_1k ( TransactionID: integer, Date: date, Time: text, CustomerID:\ninteger, CardID: integer, GasStationID: integer, ProductID: integer, Amount:\ninteger, Price: real )\n# yearmonth ( CustomerID: integer, Date: text, Consumption: real )\n### Question: How much did customer 6 consume in total between August and November\n2013?\n### Masked Question: How much did [TABLE] [VALUE] consume in total between [VALUE]\nand [VALUE]?\n&lt;/example2&gt;\n\n&lt;example3&gt;\n### SQLite SQL tables, with their properties:\n# drivers ( driverId: integer, driverRef: text, number: integer, code: text,\nforename: text, surname: text, dob: date, nationality: text, url: text )\n### Question: How many Australian drivers who were born in 1980?\n### Masked Question: How many [VALUE] [TABLE] who were born in [VALUE]?\n&lt;/example3&gt;\n\n### SQLite SQL tables, with their properties:\n# molecule ( molecule_id, label )\n# bond ( bond_id, molecule_id, bond_type )\n#\n# bond.molecule_id = molecule.molecule_id\n### Question: Among all chemical compounds identified in the database, what percent\nof compounds form a triple-bond.\n### Knowledge Evidence: triple bond refers to bond_type = ’#’;\n### Masked Question:\n\n\n3.2.2 SQL Generation\n### Generate the correct SQL query for a\ngiven DB schema and question.\n### Gold Examples:\n- Question: ...\n- Gold SQL: ...\n...\n\n### DB Schema: ...\n### Sample Table Contents: ...\n### Question: ...\nYour answer should be in the json format\n:\n{\n\"reasoning\": \"..\" # The reasoning\nsteps behind the generated SQL query\n\"sql\": \"..\" # The generated SQL query.\n}\n### Your answer:\n\nprompt에는 few-shot examples, DB schema, sample rows, question이 포함.\nfew-show examples에는 질문-gold SQL pairs 가 포함.\nprompt 길이를 줄이기 위해 schema-linking 결과 테이블과 컬럼만 포함.\nCSV 포멧으로 sample rows 포함.\nSQL query 뿐만 아니라 reasoning도 생성.\n\\(p_q\\)개의 prompt, 각 n개 응답 생성. (with a high sampling temperature)\n\nB.3 Prompt for SQL Generation\n### Given a database schema, question, and knowledge evidence, generate the correct\nsqlite SQL query for the question.\n\n&lt;examples&gt;\n# Question: Among all the customers, what is the percentage of the customer’s nation\nbeing Germany?\n# Knowledge Evidence: DIVIDE(COUNT(c_custkey when n_name = ’GERMANY’), COUNT(\nc_custkey)) as percentage;\n# Gold SQL: SELECT CAST(SUM(IIF(T2.n_name = ’GERMANY’, 1, 0)) AS REAL) * 100 / COUNT\n(T1.c_custkey) FROM customer AS T1 INNER JOIN nation AS T2 ON T1.c_nationkey =\nT2.n_nationkey\n\n# Question: Among the schools whose donators are teachers, what is the percentage of\nschools that are in Brooklyn?\n# Knowledge Evidence: donors are teachers refers to is_teacher_acct = ’t’; Brooklyn\nis school_city; percentage = Divide(Count(school_city-’Brooklyn’),Count(\nschool_city))*100\n# Gold SQL: SELECT CAST(SUM(CASE WHEN T1.school_city LIKE ’Brooklyn’ THEN 1 ELSE 0\nEND) AS REAL) * 100 / COUNT(T1.teacher_acctid) FROM projects AS T1 INNER JOIN\ndonations AS T2 ON T1.projectid = T2.projectid WHERE T2.is_teacher_acct = ’t’\n...\n&lt;/examples&gt;\n\n### SQLite SQL tables, with their properties:\n# molecule ( molecule_id, label )\n# bond ( bond_id, molecule_id, bond_type )\n#\n# bond.molecule_id = molecule.molecule_id\n### The type and description of each column:\n# [molecule]\n- molecule_id (text): unique id of molecule\n- label (text): whether this molecule is carcinogenic or not\n# [bond]\n- bond_id (text): unique id representing bonds\n- molecule_id (text): identifying the molecule in which the bond appears\n- bond_type (text): type of the bond\n### Sample rows of each table in csv format:\n# [molecule]\nmolecule_id,label\nTR000,+\nTR001,+\nTR002,-\n# [bond]\nbond_id,molecule_id,bond_type\nTR000_1_2,TR000,-\nTR000_2_3,TR000,-\nTR000_2_4,TR000,-\n\n### Question: Among all chemical compounds identified in the database, what percent\nof compounds form a triple-bond.\n\n### Knowledge Evidence: triple bond refers to bond_type = ’#’;\nYou need to not only create the SQL, but also provide the detailed reasoning steps\nrequired to create the SQL. Your answer should strictly follow the following\njson format:\n{\n\"reasoning\": \"\", // The reasoning steps for generating SQL.\n\"sql\": \"\", // The final generated SQL.\n}\n### Your Answer:"
-  },
-  {
-    "objectID": "posts/mcs_sql/mcs_sql.html#selection",
-    "href": "posts/mcs_sql/mcs_sql.html#selection",
-    "title": "MCS SQL Paper Review",
-    "section": "3.3 Selection",
-    "text": "3.3 Selection\n\n위에서 생성한 SQL을 confidence scores로 필터링하고 LLM에게 가장 정확한 쿼리를 선택하게 한다.\n\n\n3.3.1 Candidate Filtering\n\n모든 SQL 쿼리를 실행시켜서 에러, 타임아웃 제외.\n각 쿼리마다 confidence score를 계산해서 0.2 이하 제외.\n같은 결과를 내는 것들만 묶어서 가장 빠른 쿼리 하나만 남김.\nconfidence score : self-consistency 체크. 후보 쿼리 N개 중 하나가 다른 쿼리들과 같은 결과를 내는지. \\[\n\\text{confidence}(q_i)= \\frac{1}{N} \\sum_{j=1}^N [\\text{exec}(q_j) = \\text{exec}(q_i)]\n\\]\n\n\n\n3.3.2 Multiple-Choise Selection (MCS)\n### For a given DB schema and question,\nselect the most accurate query among\nthe candidate SQL queries.\n### DB schema: ...\n### Question: ...\n### Candidate SQLs:\n1. SQL1\n2. SQL2\n3. SQL3\nYour answer should be in the json format\n:\n{\n\"reasoning\": \"..\" # The reasoning\nsteps for selecting the correct SQL\nquery.\n\"sql\": \"..\" # The selected SQL query.\n}\n\nLLM을 사용해서 위에서 만든 후보 풀에서 가장 정확한 쿼리를 선택.\n후보 쿼리들은 confidence scores가 내림차순으로 정렬.\nn개의 응답을 생성. 가장 많은 투표를 받은 쿼리 선택.\n\nB.4 Prompt for SQL Selection\n### When a DB schema, a question, and a knowledge evidence are given, and up to\nthree SQLite queries expressing the question are given, please choose the most\naccurate SQL based on the Checklist.\n&lt;examples&gt;\n# Question: Among all the customers, what is the percentage of the customer’s nation\nbeing Germany?\n# Knowledge Evidence: DIVIDE(COUNT(c_custkey when n_name = ’GERMANY’), COUNT(\nc_custkey)) as percentage;\n# Gold SQL: SELECT CAST(SUM(IIF(T2.n_name = ’GERMANY’, 1, 0)) AS REAL) * 100 / COUNT\n(T1.c_custkey) FROM customer AS T1 INNER JOIN nation AS T2 ON T1.c_nationkey =\nT2.n_nationkey\n# Question: Among the schools whose donators are teachers, what is the percentage of\nschools that are in Brooklyn?\n# Knowledge Evidence: donors are teachers refers to is_teacher_acct = ’t’; Brooklyn\nis school_city; percentage = Divide(Count(school_city-’Brooklyn’),Count(\nschool_city))*100\n# Gold SQL: SELECT CAST(SUM(CASE WHEN T1.school_city LIKE ’Brooklyn’ THEN 1 ELSE 0\nEND) AS REAL) * 100 / COUNT(T1.teacher_acctid) FROM projects AS T1 INNER JOIN\ndonations AS T2 ON T1.projectid = T2.projectid WHERE T2.is_teacher_acct = ’t’\n...\n&lt;/examples&gt;\n\n### SQLite SQL tables, with their properties:\n# molecule ( molecule_id, label )\n# bond ( bond_id, molecule_id, bond_type )\n#\n# bond.molecule_id = molecule.molecule_id\n### The type and description of each column:\n# [molecule]\n- molecule_id (text): unique id of molecule\n- label (text): whether this molecule is carcinogenic or not\n# [bond]\n- bond_id (text): unique id representing bonds\n- molecule_id (text): identifying the molecule in which the bond appears\n- bond_type (text): type of the bond\n### Sample rows of each table in csv format:\n# [molecule]\nmolecule_id,label\nTR000,+\nTR001,+\nTR002,-\n# [bond]\nbond_id,molecule_id,bond_type\nTR000_1_2,TR000,-\nTR000_2_3,TR000,-\nTR000_2_4,TR000,-\n\n### Question: Among all chemical compounds identified in the database, what percent\nof compounds form a triple-bond.\n### Knowledge Evidence: triple bond refers to bond_type = ’#’;\n### Candidate SQLs:\n1. SELECT CAST(COUNT(CASE WHEN bond_type = ’#’ THEN 1 ELSE NULL END) AS REAL) * 100\n/ COUNT(*) FROM bond\n2. SELECT CAST(COUNT(DISTINCT CASE WHEN bond_type = ’#’ THEN molecule_id ELSE NULL\nEND) AS REAL) * 100 / COUNT(DISTINCT molecule_id) FROM bond\n### Checklist:\n1. The SQL should accurately represent the question.\n2. The SQL should accurately use the given knowledge evidence.\n3. The SELECT clause should not include any additional columns that are not included\nin the question.\n4. The order of columns in the SELECT clause must be the same as the order in the\nquestion.\n5. Check if the operations are being performed correctly according to the column\ntype.\n### Instruction:\n- If the first SQL satisfies all the conditions of the checklist, please choose the\nfirst SQL. If not, move on to the next SQL.\n- If there’s no SQL that satisfies all the requirements on the checklist, just\nchoose the first SQL.\n- Provide a detailed step-by-step explanation following the order of the checklist\nwhen checking whether each SQL satisfies the checklist.\n- Your answer should strictly follow the following json format.\n{{\n\"reasoning\": \"\", // The reasoning steps for choosing the best SQL.\n\"sql\": \"\", // The final chosen SQL.\n}}\n### Your Answer:"
-  },
-  {
-    "objectID": "posts/mcs_sql/mcs_sql.html#datasets",
-    "href": "posts/mcs_sql/mcs_sql.html#datasets",
-    "title": "MCS SQL Paper Review",
-    "section": "4.1 Datasets",
-    "text": "4.1 Datasets\n\nSpider : 10,181 질문, 5,693개의 쿼리, 200 DBs\nBIRD : 12,751 질문-SQL pairs, 95 DB. 더 복잡한 쿼리가 포함되어 있음."
-  },
-  {
-    "objectID": "posts/mcs_sql/mcs_sql.html#evaluation-metrics",
-    "href": "posts/mcs_sql/mcs_sql.html#evaluation-metrics",
-    "title": "MCS SQL Paper Review",
-    "section": "4.2 Evaluation Metrics",
-    "text": "4.2 Evaluation Metrics\n\nExecution Accuracy(EX) : 생성한 SQL 실행결과가 gold SQL query(answer) 실행결과가 같은지\nValid Efficiency Score(VES) : BIRD에서 추가로 제시. EX에 gold SQL query 실행 시간과 얼마나 다른지 추가. 정확성과 성능 측정"
-  },
-  {
-    "objectID": "posts/mcs_sql/mcs_sql.html#implementation-details",
-    "href": "posts/mcs_sql/mcs_sql.html#implementation-details",
-    "title": "MCS SQL Paper Review",
-    "section": "4.3 Implementation Details",
-    "text": "4.3 Implementation Details\n\nLLM 모델 : GPT-4\n임베딩 모델 : text-embedding-ada-002\nsimilarity search : FAISS\nschema linking(table, column) prompts \\(p_t\\), \\(p_c\\) : 3개\nSQL generation prompts \\(p_q\\) : 5개\n각 GPT API call 마다 temperature 1.0, n=20 응답 생성\nSQL-generation, MCS 에는 k=20개의 question-SQL pairs를 few-shot example로 사용.\n타임아웃 180초\nconfidence score threshold 0.2"
-  },
-  {
     "objectID": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html",
     "href": "posts/rlaif_vs_rlhf/rlaif_vs_rlhf.html",
     "title": "RLAIF vs RLHF Review",
@@ -355,5 +194,166 @@
     "title": "RLAIF vs RLHF Review",
     "section": "N. End-to-end Sensitivity to AI Labeler Alignment",
     "text": "N. End-to-end Sensitivity to AI Labeler Alignment\n\nAI Labeler Alignment의 민감도를 평가하기 위해 Base 0-shot, Detailed CoT 0-shot으로 AI Labeling을 하고 RLAIF 학습을 진행. AI Labeler Alignment는 각각 76.1%, 78.0%.\n직접 비교 했을때 평가자(인간)은 59%의 비율로 Detailed CoT 0-shot을 선호. 이는 AI Labeler Alignment의 작은 향상이 최종 RL policy를 크게 개선 시킬수도 있음을 알려줌.\n하지만 연구는 제한적이라 추가 실험이 필요."
+  },
+  {
+    "objectID": "posts/deepseek_r1/deepseek_r1.html",
+    "href": "posts/deepseek_r1/deepseek_r1.html",
+    "title": "DeepSeek-R1 Paper Review",
+    "section": "",
+    "text": "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning https://arxiv.org/pdf/2501.12948"
+  },
+  {
+    "objectID": "posts/deepseek_r1/deepseek_r1.html#contributions",
+    "href": "posts/deepseek_r1/deepseek_r1.html#contributions",
+    "title": "DeepSeek-R1 Paper Review",
+    "section": "1.1 Contributions",
+    "text": "1.1 Contributions\nPost-Training: Large-Scale Reinforcement Learning on the Base Model\n\nDeepSeek-R1-Zero는 SFT 없이 RL 만으로 복잡한 문제에 대해 chain-of-thought(CoT)를 진행함. 모델은 self-verification, reflection, generating long CoTs를 설명한다. LLM이 pure RL로도 reasoning capabilities가 강화되는 것을 보여준다.\nReasoning pattern을 강화하고 human preferences를 조절하는 것을 목표로 하는 2번의 RL, 모델의 reasoning and non-reasoning capabilities 역할을 추가하는 2번의 SFT pipline을 소개.\n\nDistillation: Smaller Models Can be Powerful Too\n\n큰 reasoning model에서 작은 model로 distillation을 하는 것은 작은 model이 RL 하는 것보다 성능이 좋다.\nDeepSeek-R1으로 생성한 reasoning data로 널리 사용되는 model을 fine-tune 했다."
+  },
+  {
+    "objectID": "posts/deepseek_r1/deepseek_r1.html#overview",
+    "href": "posts/deepseek_r1/deepseek_r1.html#overview",
+    "title": "DeepSeek-R1 Paper Review",
+    "section": "2.1 Overview",
+    "text": "2.1 Overview\n\nDeepSeek-R1-Zero : RL만 사용해서 reasoning capabilities 상승\nDeepSeek-R1 : 작은 cold-start data(long Chain-of-Thought)와 RL로 성능 더 상승\nDistill the reasoning capability from DeepSeek-R1 to small dense models"
+  },
+  {
+    "objectID": "posts/deepseek_r1/deepseek_r1.html#deepseek-r1-zero-reinforcement-learning-on-the-base-model",
+    "href": "posts/deepseek_r1/deepseek_r1.html#deepseek-r1-zero-reinforcement-learning-on-the-base-model",
+    "title": "DeepSeek-R1 Paper Review",
+    "section": "2.2 DeepSeek-R1-Zero: Reinforcement Learning on the Base Model",
+    "text": "2.2 DeepSeek-R1-Zero: Reinforcement Learning on the Base Model\n\n2.2.1 Reinforcement Learning Algorithm\nGRPO (Group Relative Policy Optimization)\n\nTraining cost를 절약하기 위해 policy model의 크기와 동일한 critic model을 포기하고 group scores를 측정하는 GRPO를 도입.\n질문 \\(q\\)에 대해 GRPO는 old policy \\(\\pi_{\\theta_\\text{OLD}}\\)의 outputs \\(\\{o_1, o_2, \\cdots, o_G\\}\\)를 구하고 다음의 objective function을 최대화를 해서 policy model \\(\\pi_\\theta\\)를 최적화한다. \\[\n\\mathcal{J}_{\\text{GRPO}}\n= \\mathbb{E}[q \\sim P(Q), \\{o_i\\}_{i=1}^{G} \\sim \\pi_{\\theta_\\text{OLD}}(O|q)]\n\\] \\[\n\\frac{1}{G} \\sum_{i=1}^G\n\\left(\n\\text{min} \\left(\n  \\frac{\\pi_\\theta(o_i|q)}{\\pi_{\\text{old}}(o_i|q)}A_i,\n  \\text{clip} \\left(\\frac{\\pi_\\theta(o_i|q)}{\\pi_{\\text{old}}(o_i|q)}, 1-\\epsilon, 1+\\epsilon \\right) A_i\n\\right) - \\beta \\; \\mathbb{D}_{KL}(\\pi_\\theta || \\pi_{ref})\n\\right)\n\\] \\[\n\\mathbb{D}_{KL}(\\pi_\\theta || \\pi_{ref}) =\n\\frac{\\pi_{ref}(o_i|q)}{\\pi_\\theta(o_i|q)} -\n\\text{log} \\frac{\\pi_{ref}(o_i|q)}{\\pi_\\theta(o_i|q)} - 1\n\\]\n\\(\\epsilon\\)과 \\(\\beta\\)는 hyper-parameters\n\\(A_i\\)는 a group of rewards \\(\\{r_1, r_2, \\cdots, r_G\\}\\)로 계산한 advantage \\[\nA_i = \\frac{r_i - \\text{mean}(\\{r_1, r_2, \\cdots, r_G\\})}\n{\\text{std}(\\{r_1, r_2, \\cdots, r_G\\})}\n\\]\n\n\n\n2.2.2 Reward Modeling\n\nreward는 RL의 최적화 방향을 결정\nDeepSeek-R1-Zero는 2가지 rule-based reward system을 구성\nAccuracy rewards : response가 맞는지 체크. 수학 문제의 경우 특정 박스 안에 출력해서 답 비교, LeetCode 문제의 경우 test cases를 가지고 피드백을 생성가능. (compiler도 사용)\nFormat rewards : &lt;think&gt;, &lt;/think&gt; tag 사이에 생각을 하도록 강제하는 reward model도 사용\n메모) SFT의 경우 답변 스크립트를 모두 작성하는 것을 기준으로 한듯. RL은 마지막 최종 답(수학, 코딩문제)를 비교해서 맞으면 reward.\noutcome reward model를 추가적으로 사용하지 않음. (비용 등 문제)\n\n\n\n2.2.3 Training Template\n\nprompt = \"\"\"\nA conversation between User and Assistant. The user asks a question, and the Assistant solves it. The assistant first thinks about the reasoning process in the mind and then provides the user with the answer. The reasoning process and answer are enclosed within &lt;think&gt; &lt;/think&gt; and &lt;answer&gt; &lt;/answer&gt; tags, respectively, i.e., &lt;think&gt; reasoning process here &lt;/think&gt; &lt;answer&gt; answer here &lt;/answer&gt;.\nUser: prompt.\nAssistant:\n\"\"\"\n\n\n위와 같은 template로 reasoning process를 생성하고 최종 답을 내놓는다.\n이 구조적 제약은 content-specific bias(reflective reasoning - 반성적 추론을 강제하거나 특정 문제 해결 전략을 promoting 하거나 등)를 피하고 자연스러운 추론을 관찰하기 위해 추가.\n메모) 알고리즘 문제 테스트했을때 DP만 계속 생각하더라\n\n\n\n2.2.4 Perpformance, Self-evolution Process and Aha Moment of DeepSeek-R1-Zero\nPerformance of DeepSeek-R1-Zero\n\nRL만으로 AIME 2024 pass@1 score는 15.6% -&gt; 71.0%로 급격한 상승을 보여줌. o1-0912(74.4%)에 근접해짐.\n\nSelf-evolution Process of DeepSeek-R1-Zero\n\nRL로 학습하면 할 수록 response의 길이가 점점 증가한다 -&gt; 자연스럽게 thinking time을 늘린다. (스스로 진화)\n또한 명시적으로 프로그래밍을 하지 않아도 reflection(심사숙고, model이 전단계를 다시 평가하는 것)과 다른 방법을 찾아보는 것이 생겨남.\n\nAha Moment of DeepSeek-R1-Zero\n\n모델 학습 중간 버전에서 “aha moment”가 나타남. 이 순간 DeepSeek-R1-Zero는 생각할 시간을 가지고 앞서 내놓았던 방법을 재평가 한다. 이 행동은 reasoning 능력이 자라나고 있다는 것 뿐만 아니라 RL이 예상치 못한 정교한 결과를 이끄는 것을 보여준다.\n모델에 명시적으로 문제를 푸는 방법을 가르치는 것 보다 적절한 인센티브를 주면 자율적으로 문제 해결 전략을 배운다.\n\nDrawback of DeepSeek-R1-Zero\n\n강력한 추론 능력을 보이고 자체적으로 이 능력을 개발하지만 가독성 문제와 언어 섞임 문제가 있다."
+  },
+  {
+    "objectID": "posts/deepseek_r1/deepseek_r1.html#deepseek-r1-reinforcement-learning-with-cold-start",
+    "href": "posts/deepseek_r1/deepseek_r1.html#deepseek-r1-reinforcement-learning-with-cold-start",
+    "title": "DeepSeek-R1 Paper Review",
+    "section": "2.3 DeepSeek-R1: Reinforcement Learning with Cold Start",
+    "text": "2.3 DeepSeek-R1: Reinforcement Learning with Cold Start\n두가지 의문점 - 소량의 고품질 데이터로 cold start를 사용하면 성능이 더 오를까? - 명확하고 일관된 CoT를 생성하고 강력한 일반적인 역량(general capabilities)을 보려주려면 어떻게 user-friendly model을 학습시킬까? - 메모) DeepSeek-R1은 OpenAI의 o1으로 distillation 했다는 것이 강하게 의심됨. SFT 데이터는 o1으로 만들었을 가능성이 높음.\n\n2.3.1 Cold Start\n\n불안정한 RL cold start을 막기위해 DeepSeek-R1에서는 fine-tuning 용 긴 CoT data을 수집해 초기 RL actor를 만든다.\n데이터 수집 방법 : long CoT를 가진 few-shot prompting, reflection과 verification을 생성하도록 요구하는 prompting, DeepSeek-R1-Zero outputs을 읽을 수 있는 포맷으로 만들기, human annotators로 결과를 후처리\n이 방법으로 수천 개의 데이터를 수집하고 DeepSeek-V3-Base를 fine-tuning, RL의 시작점.\n장점1, 가독성 : cold-start data를 만들때 response 끝에 요약을 추가한 가독성 있는 패턴을 설계, 어색한 response는 필터링. output format을 |special_token|&lt;reasoning_process&gt;|special_token|&lt;summary&gt;,로 정의.\n장점2, 잠재성 : 인간의 사전 지식으로 신중하게 패턴을 설계해서 DeepSeek-R1-Zero를 이김. Reasoning model은 반복학습이 더 효과적임.\n\n\n\n2.3.2 Reasoning-oriented Reinforcement Learning\n\nDeepSeek-V3-Base를 cold-start data로 fine-tuning 후 DeepSeek-R1-Zero 처럼 RL 수행. 잘 정의된 문제와 답(코딩, 수학, 과학, 논리 추론)과 같은 reasoning-intensive tasks를 학습해서 추론 능력을 향상시키는데 집중.\nRL prompts에 여러 언어가 있을 경우 학습 중에 CoT에서 언어 섞임 문제를 발견. 이를 완화하려고 CoT에서 target language의 proportion으로 language consistency reward를 도입. 이런 조정이 다소 모델 성능을 떨어뜨리지만 가독성을 높임.\nreasoning task의 정확도와 language consistency reward를 더해서 최종 reward를 만듬. 그리고 수렴할때까지 학습.\n\n\n\n2.3.3 Rejection Sampling and Supervised Find-Tuning\n\n앞의 RL가 수렴하면 이 checkpoint를 가지고 SFT 데이터를 모은다.\n이 단계에서는 일반적인 task를 강화하기 위한 데이터를 추가한다.\n\nReasoning data\n\nReasoning prompts를 만들고 앞에서 만든 RL checkpoint 모델의 outputs을 rejection sampling을 했다.\n이 단계에선 추가적인 데이터가 있음. 여기서 데이터셋을 확장하는데, 일부는 DeepSeek-V3에 정답(ground-truth)과 모델 예측을 입력해 DeppSeek-V3의 판단을 reward로 사용. (generative reward model, 개인적으로 이 ground-truth가 OpenAI o1의 response라고 생각한다.)\n읽기 어려운 output은 제외. 각 prompt마다 옳은 response만 유지. 600K training samples를 모음.\n\nNon-Reasoning data\n\nDeepSeek-V3의 SFT dataset의 부분을 재사용. 어떤 non-reasoning data에 대해 DeepSeek-V3에 prompting으로 CoT response 요구. 여기서 200K training samples를 모음.\n\n여기서 모은 800K samples로 DeepSeek-V3-Base를 2 epoch로 fine-tuning함.\n\n\n2.3.4 Reinforcement Learning for all Scenarios\n\nreward의 조합과 다양한 프롬프트 분포를 사용해 RL -&gt; helpfulness, harmlessness, reasoning capabilities\nReasoning data는 DeepSeek-R1-Zero 처럼, 일반적인 data는 human preferences를 캐치하도록 DeepSeek-V3 처럼 preference pairs로 학습.\nhelpfulness를 위해 summary에 집중. reasoning process를 방해를 최소화하기 위해 response와 user 사이 관련성, 효용성 집중.\nharmlessness를 위해 reasoning process와 summary를 포함한 모든 response를 평가.\n궁극적으로 reward 조합과 데이터 분포의 다양함은 도움됨."
+  },
+  {
+    "objectID": "posts/deepseek_r1/deepseek_r1.html#distilation-empower-small-models-with-reasoning-capability",
+    "href": "posts/deepseek_r1/deepseek_r1.html#distilation-empower-small-models-with-reasoning-capability",
+    "title": "DeepSeek-R1 Paper Review",
+    "section": "2.4 Distilation: Empower Small Models with Reasoning Capability",
+    "text": "2.4 Distilation: Empower Small Models with Reasoning Capability\n\nDeepSeek-R1의 800k samples를 가지고 Qwen, Llama를 SFT만(RL 없이) 해도 reasoning abilities를 향상시킴."
+  },
+  {
+    "objectID": "posts/deepseek_r1/deepseek_r1.html#deepseek-r1-evaluation",
+    "href": "posts/deepseek_r1/deepseek_r1.html#deepseek-r1-evaluation",
+    "title": "DeepSeek-R1 Paper Review",
+    "section": "3.1 DeepSeek-R1 Evaluation",
+    "text": "3.1 DeepSeek-R1 Evaluation\n\n여러가지 Benchmarks에서 좋아졌다."
+  },
+  {
+    "objectID": "posts/deepseek_r1/deepseek_r1.html#distilled-model-evaluation",
+    "href": "posts/deepseek_r1/deepseek_r1.html#distilled-model-evaluation",
+    "title": "DeepSeek-R1 Paper Review",
+    "section": "3.2 Distilled Model Evaluation",
+    "text": "3.2 Distilled Model Evaluation\n\nDilstilled 7B는 GPT-4o-0513 이김. Distilled 14B는 Qwwq-32B-preview 이김. Dilstilled 32B, 70B는 o1-mini 이김.\n이 distilled model에 추가적인 RL을 적용하면 성능이 더 올라간다. 추가 실험 필요해서 SFT한 결과만 남긴다."
+  },
+  {
+    "objectID": "posts/deepseek_r1/deepseek_r1.html#distilation-vs-reinforcement-learning",
+    "href": "posts/deepseek_r1/deepseek_r1.html#distilation-vs-reinforcement-learning",
+    "title": "DeepSeek-R1 Paper Review",
+    "section": "4.1 Distilation vs Reinforcement Learning",
+    "text": "4.1 Distilation vs Reinforcement Learning\n\ndistilation 없이 RL만 한 것은 distilation만 한 것보다 성능이 낮다.\n강력한 모델로 작은 모델에 distilation 하는 것이 가장 좋은 결과를 얻었다. 작은 모델을 large-scale RL을 한 것은 큰 연산을 요구하나 distilation 성능보다 낮다.\ndistilation은 경제적이고 효과적이나, 지식의 한계점을 돌파하려면 더 강력한 base model과 더 큰 scale의 RL이 필요하다."
+  },
+  {
+    "objectID": "posts/deepseek_r1/deepseek_r1.html#unsuccessful-attempts",
+    "href": "posts/deepseek_r1/deepseek_r1.html#unsuccessful-attempts",
+    "title": "DeepSeek-R1 Paper Review",
+    "section": "4.2 Unsuccessful Attempts",
+    "text": "4.2 Unsuccessful Attempts\n시도했으나 실패한 것. 이 방법으로 불가능하다는 뜻이 아님.\nProcess Reward Model (PRM)\n\n현실적으로 세 가지 이유 때문에 힘듬. 1) 일반적인 reasoning에서 세밀한 단계를 정의하는 것, 2) 중간 단계가 맞는지 체크, 3) Reward Hacking 가능하고 재학습이 어려움.\nPRM은 top-N responses를 재정렬하거나 guided search에서 도움이 됨.\n\nMonte Carlo Tree Search (MCTS)\n\n특정한 reasoning 단계를 검색하기 위해 여러 태그를 생성. 학습을 위해 pre-trained value model에 의한 MCTS로 수집된 prompts의 답을 생성. 그리고 actor, value model을 학습.\nchess랑 다르게 token generation은 search space가 더 크다. node 확장 수를 제한하니까 local optima에 갖힘.\nfine-grained value model을 학습시키는 것은 어려움 -&gt; search process에 영향"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this blog"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Knowledge Log",
+    "section": "",
+    "text": "RLAIF vs RLHF Review\n\n\n\n\n\n\nLLM\n\n\n\n\n\n\n\n\n\nMay 8, 2025\n\n\nJaehyeok Lee\n\n\n\n\n\n\n\n\n\n\n\n\nMCS SQL Paper Review\n\n\n\n\n\n\nLLM\n\n\n\n\n\n\n\n\n\nMar 19, 2025\n\n\nJaehyeok Lee\n\n\n\n\n\n\n\n\n\n\n\n\nXiyan SQL Paper Review\n\n\n\n\n\n\nLLM\n\n\n\n\n\n\n\n\n\nMar 12, 2025\n\n\nJaehyeok Lee\n\n\n\n\n\n\n\n\n\n\n\n\nDeepSeek-R1 Paper Review\n\n\n\n\n\n\nLLM\n\n\n\n\n\n\n\n\n\nFeb 22, 2025\n\n\nJaehyeok Lee\n\n\n\n\n\n\n\n\n\n\n\n\n(Statistics110) 10. Expectation Continued\n\n\n\n\n\n\nstatistics110\n\n\n\n\n\n\n\n\n\nDec 29, 2024\n\n\nJaehyeok Lee\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/mcs_sql/mcs_sql.html",
+    "href": "posts/mcs_sql/mcs_sql.html",
+    "title": "MCS SQL Paper Review",
+    "section": "",
+    "text": "MCS-SQL, Leveraging Multiple Prompts and Multiple-Choice Selection For Text-to-SQL Generation https://arxiv.org/pdf/2405.07467"
+  },
+  {
+    "objectID": "posts/mcs_sql/mcs_sql.html#schema-linking",
+    "href": "posts/mcs_sql/mcs_sql.html#schema-linking",
+    "title": "MCS SQL Paper Review",
+    "section": "3.1 Schema Linking",
+    "text": "3.1 Schema Linking\n\nSchema Linking으로 text-to-sql 성능이 많이 오름.\nhigh recall을 목표로 여러 프롬프트를 도입.\n\n\n3.1.1 Table Linking\n\nLLM에게 테이블 선택 + 왜 필요한지(CoT) 물음.\nJSON 포맷으로 응답하도록 설정\n\n### For a given DB schema and question,\nextract the list of tables required\nto write the SQL query.\n### DB schema: ...\n### Question: ...\n\nYour answer should be in the json format\n:\n{\n\"reasoning\": \"...\" # The reason for\nselecting each table.\n\"answer\": [...] # List of selected\ntables.\n}\n### Your answer:\n\n테이블과 컬럼 순서에 따라 결과가 달랐음. 이 영향을 최소화하기 위해 테이블 순서를 셔플해서 \\(p_t\\)개의 distinct prompts 생성. 각 prompt마다 n개 응답 생성(높은 sampling temperature 사용). n개의 응답을 union. 그 이유는 필요없는 테이블은 뒤의 프로세스에서 큰 영향이 없지만 필요한 테이블이 없는 것은 영향이 크기 때문.\n\nB.1.1 Prompt for Table Linking\n### Given a database schema, question, and knowledge evidence, extract a list of\ntables that should be referenced to convert the question into SQL.\n### SQLite SQL tables, with their properties:\n# molecule ( molecule_id, label )\n# connected ( atom_id, atom_id2, bond_id )\n# bond ( bond_id, molecule_id, bond_type )\n# atom ( atom_id, molecule_id, element )\n#\n# atom.molecule_id = molecule.molecule_id\n# bond.molecule_id = molecule.molecule_id\n# connected.bond_id = bond.bond_id\n# connected.atom_id2 = atom.atom_id\n# connected.atom_id = atom.atom_id\n### Question: Among all chemical compounds identified in the database, what percent\nof compounds form a triple-bond.\n### Knowledge Evidence: triple bond refers to bond_type = ’#’;\nYou need to not only select the required tables, but also explain in detail why each\ntable is needed.\nYour answer should strictly follow the following json format.\n{\n\"reasoning\": \"\", // The reason for choosing each table.\n\"tables\": [], // List of selected tables.\n}\n### Your Answer:\n\n\n3.1.2 Column Linking\n\n앞에서 Table Linking의 결과 테이블만 써서 column linking. prompt도 비슷.\n같은 컬럼 이름이 존재할 수 있어서 [table_name].[column_name] 포맷으로 응답하게 함.\n역시 테이블, 컬럼 순서 셔플해서 prompt \\(p_c\\)개 생성하고 n개 응답 생성 후 union.\nSQL Generation에서는 Table, Column Linking 결과만을 제시.\n\nB.1.2 Prompt for Column Linking\n### Given a database schema, question, and knowledge evidence, extract a list of\ncolumns that should be referenced to convert the question into SQL.\n### SQLite SQL tables, with their properties:\n# molecule ( molecule_id, label )\n# bond ( bond_id, molecule_id, bond_type )\n#\n# bond.molecule_id = molecule.molecule_id\n### Question: Among all chemical compounds identified in the database, what percent\nof compounds form a triple-bond.\n### Knowledge Evidence: triple bond refers to bond_type = ’#’;\nYou need to not only select the required columns, but also explain in detail why\neach column is needed.\nYour answer should strictly follow the following json format.\n{{\n\"reasoning\": \"\", // The reason for choosing each column.\n\"columns\": [\"table_name_i.column_name_j\", ...], // List of selected columns\n}}\n### Your Answer:"
+  },
+  {
+    "objectID": "posts/mcs_sql/mcs_sql.html#multiple-sql-generation",
+    "href": "posts/mcs_sql/mcs_sql.html#multiple-sql-generation",
+    "title": "MCS SQL Paper Review",
+    "section": "3.2 Multiple SQL Generation",
+    "text": "3.2 Multiple SQL Generation\n\nSQL generation 역시 다양한 prompt로 생성.\nfew-shot examples을 선택과 순서를 다양하게 해서 prompt를 생성.\n\n\n3.2.1 Few-Shot Examples Selection\n\n하나의 test sample에 대해 training dataset에서 few-shot examples가 선택된다.\n여러 prompts를 만들기 위해 두 가지 전략 사용: question similarity, masked question similarity.\nquestion similarity : test 질문과 가장 가까운 training 질문 top-k개 선택 (sentence embedding)\nquestion에서 DB Schema에 특화된 tokens를 마스킹. 이 방법은 특정 도메인과 관계없이 비슷한 질문을 찾는 데 도움을 줌. LLM을 사용해서 DB Schema와 질문에서 테이블 이름, 컬럼 이름, 값을 special tokens으로 대체.\n위 두 가지 방법으로 \\(p_q\\) 개의 prompts를 만드는데, 하나는 오직 question similarity, 다른 것은 masked similarity, 나머지는 두 가지를 합쳐서 다양한 순서로 만듬.\n\nB.2 Prompt for Question Masking\n### Given a DB schema and a question, mask the table name, column name, and values\nin the question.\n\n&lt;example1&gt;\n### SQLite SQL tables, with their properties:\n# customers ( CustomerID: integer, Segment: text, Currency: text )\n# gasstations ( GasStationID: integer, ChainID: integer, Country: text, Segment:\ntext )\n# products ( ProductID: integer, Description: text )\n# transactions_1k ( TransactionID: integer, Date: date, Time: text, CustomerID:\ninteger, CardID: integer, GasStationID: integer, ProductID: integer, Amount:\ninteger, Price: real )\n# yearmonth ( CustomerID: integer, Date: text, Consumption: real )\n### Question: For all the people who paid more than 29.00 per unit of product id No\n.5. Give their consumption status in the August of 2012.\n### Masked Question: For all the [TABLE] who paid more than [VALUE] per unit of [\nCOLUMN] [VALUE]. Give their consumption status in the [VALUE].\n&lt;/example1&gt;\n\n&lt;example2&gt;\n### SQLite SQL tables, with their properties:\n# customers ( CustomerID: integer, Segment: text, Currency: text )\n# gasstations ( GasStationID: integer, ChainID: integer, Country: text, Segment:\ntext )\n# products ( ProductID: integer, Description: text )\n# transactions_1k ( TransactionID: integer, Date: date, Time: text, CustomerID:\ninteger, CardID: integer, GasStationID: integer, ProductID: integer, Amount:\ninteger, Price: real )\n# yearmonth ( CustomerID: integer, Date: text, Consumption: real )\n### Question: How much did customer 6 consume in total between August and November\n2013?\n### Masked Question: How much did [TABLE] [VALUE] consume in total between [VALUE]\nand [VALUE]?\n&lt;/example2&gt;\n\n&lt;example3&gt;\n### SQLite SQL tables, with their properties:\n# drivers ( driverId: integer, driverRef: text, number: integer, code: text,\nforename: text, surname: text, dob: date, nationality: text, url: text )\n### Question: How many Australian drivers who were born in 1980?\n### Masked Question: How many [VALUE] [TABLE] who were born in [VALUE]?\n&lt;/example3&gt;\n\n### SQLite SQL tables, with their properties:\n# molecule ( molecule_id, label )\n# bond ( bond_id, molecule_id, bond_type )\n#\n# bond.molecule_id = molecule.molecule_id\n### Question: Among all chemical compounds identified in the database, what percent\nof compounds form a triple-bond.\n### Knowledge Evidence: triple bond refers to bond_type = ’#’;\n### Masked Question:\n\n\n3.2.2 SQL Generation\n### Generate the correct SQL query for a\ngiven DB schema and question.\n### Gold Examples:\n- Question: ...\n- Gold SQL: ...\n...\n\n### DB Schema: ...\n### Sample Table Contents: ...\n### Question: ...\nYour answer should be in the json format\n:\n{\n\"reasoning\": \"..\" # The reasoning\nsteps behind the generated SQL query\n\"sql\": \"..\" # The generated SQL query.\n}\n### Your answer:\n\nprompt에는 few-shot examples, DB schema, sample rows, question이 포함.\nfew-show examples에는 질문-gold SQL pairs 가 포함.\nprompt 길이를 줄이기 위해 schema-linking 결과 테이블과 컬럼만 포함.\nCSV 포멧으로 sample rows 포함.\nSQL query 뿐만 아니라 reasoning도 생성.\n\\(p_q\\)개의 prompt, 각 n개 응답 생성. (with a high sampling temperature)\n\nB.3 Prompt for SQL Generation\n### Given a database schema, question, and knowledge evidence, generate the correct\nsqlite SQL query for the question.\n\n&lt;examples&gt;\n# Question: Among all the customers, what is the percentage of the customer’s nation\nbeing Germany?\n# Knowledge Evidence: DIVIDE(COUNT(c_custkey when n_name = ’GERMANY’), COUNT(\nc_custkey)) as percentage;\n# Gold SQL: SELECT CAST(SUM(IIF(T2.n_name = ’GERMANY’, 1, 0)) AS REAL) * 100 / COUNT\n(T1.c_custkey) FROM customer AS T1 INNER JOIN nation AS T2 ON T1.c_nationkey =\nT2.n_nationkey\n\n# Question: Among the schools whose donators are teachers, what is the percentage of\nschools that are in Brooklyn?\n# Knowledge Evidence: donors are teachers refers to is_teacher_acct = ’t’; Brooklyn\nis school_city; percentage = Divide(Count(school_city-’Brooklyn’),Count(\nschool_city))*100\n# Gold SQL: SELECT CAST(SUM(CASE WHEN T1.school_city LIKE ’Brooklyn’ THEN 1 ELSE 0\nEND) AS REAL) * 100 / COUNT(T1.teacher_acctid) FROM projects AS T1 INNER JOIN\ndonations AS T2 ON T1.projectid = T2.projectid WHERE T2.is_teacher_acct = ’t’\n...\n&lt;/examples&gt;\n\n### SQLite SQL tables, with their properties:\n# molecule ( molecule_id, label )\n# bond ( bond_id, molecule_id, bond_type )\n#\n# bond.molecule_id = molecule.molecule_id\n### The type and description of each column:\n# [molecule]\n- molecule_id (text): unique id of molecule\n- label (text): whether this molecule is carcinogenic or not\n# [bond]\n- bond_id (text): unique id representing bonds\n- molecule_id (text): identifying the molecule in which the bond appears\n- bond_type (text): type of the bond\n### Sample rows of each table in csv format:\n# [molecule]\nmolecule_id,label\nTR000,+\nTR001,+\nTR002,-\n# [bond]\nbond_id,molecule_id,bond_type\nTR000_1_2,TR000,-\nTR000_2_3,TR000,-\nTR000_2_4,TR000,-\n\n### Question: Among all chemical compounds identified in the database, what percent\nof compounds form a triple-bond.\n\n### Knowledge Evidence: triple bond refers to bond_type = ’#’;\nYou need to not only create the SQL, but also provide the detailed reasoning steps\nrequired to create the SQL. Your answer should strictly follow the following\njson format:\n{\n\"reasoning\": \"\", // The reasoning steps for generating SQL.\n\"sql\": \"\", // The final generated SQL.\n}\n### Your Answer:"
+  },
+  {
+    "objectID": "posts/mcs_sql/mcs_sql.html#selection",
+    "href": "posts/mcs_sql/mcs_sql.html#selection",
+    "title": "MCS SQL Paper Review",
+    "section": "3.3 Selection",
+    "text": "3.3 Selection\n\n위에서 생성한 SQL을 confidence scores로 필터링하고 LLM에게 가장 정확한 쿼리를 선택하게 한다.\n\n\n3.3.1 Candidate Filtering\n\n모든 SQL 쿼리를 실행시켜서 에러, 타임아웃 제외.\n각 쿼리마다 confidence score를 계산해서 0.2 이하 제외.\n같은 결과를 내는 것들만 묶어서 가장 빠른 쿼리 하나만 남김.\nconfidence score : self-consistency 체크. 후보 쿼리 N개 중 하나가 다른 쿼리들과 같은 결과를 내는지. \\[\n\\text{confidence}(q_i)= \\frac{1}{N} \\sum_{j=1}^N [\\text{exec}(q_j) = \\text{exec}(q_i)]\n\\]\n\n\n\n3.3.2 Multiple-Choise Selection (MCS)\n### For a given DB schema and question,\nselect the most accurate query among\nthe candidate SQL queries.\n### DB schema: ...\n### Question: ...\n### Candidate SQLs:\n1. SQL1\n2. SQL2\n3. SQL3\nYour answer should be in the json format\n:\n{\n\"reasoning\": \"..\" # The reasoning\nsteps for selecting the correct SQL\nquery.\n\"sql\": \"..\" # The selected SQL query.\n}\n\nLLM을 사용해서 위에서 만든 후보 풀에서 가장 정확한 쿼리를 선택.\n후보 쿼리들은 confidence scores가 내림차순으로 정렬.\nn개의 응답을 생성. 가장 많은 투표를 받은 쿼리 선택.\n\nB.4 Prompt for SQL Selection\n### When a DB schema, a question, and a knowledge evidence are given, and up to\nthree SQLite queries expressing the question are given, please choose the most\naccurate SQL based on the Checklist.\n&lt;examples&gt;\n# Question: Among all the customers, what is the percentage of the customer’s nation\nbeing Germany?\n# Knowledge Evidence: DIVIDE(COUNT(c_custkey when n_name = ’GERMANY’), COUNT(\nc_custkey)) as percentage;\n# Gold SQL: SELECT CAST(SUM(IIF(T2.n_name = ’GERMANY’, 1, 0)) AS REAL) * 100 / COUNT\n(T1.c_custkey) FROM customer AS T1 INNER JOIN nation AS T2 ON T1.c_nationkey =\nT2.n_nationkey\n# Question: Among the schools whose donators are teachers, what is the percentage of\nschools that are in Brooklyn?\n# Knowledge Evidence: donors are teachers refers to is_teacher_acct = ’t’; Brooklyn\nis school_city; percentage = Divide(Count(school_city-’Brooklyn’),Count(\nschool_city))*100\n# Gold SQL: SELECT CAST(SUM(CASE WHEN T1.school_city LIKE ’Brooklyn’ THEN 1 ELSE 0\nEND) AS REAL) * 100 / COUNT(T1.teacher_acctid) FROM projects AS T1 INNER JOIN\ndonations AS T2 ON T1.projectid = T2.projectid WHERE T2.is_teacher_acct = ’t’\n...\n&lt;/examples&gt;\n\n### SQLite SQL tables, with their properties:\n# molecule ( molecule_id, label )\n# bond ( bond_id, molecule_id, bond_type )\n#\n# bond.molecule_id = molecule.molecule_id\n### The type and description of each column:\n# [molecule]\n- molecule_id (text): unique id of molecule\n- label (text): whether this molecule is carcinogenic or not\n# [bond]\n- bond_id (text): unique id representing bonds\n- molecule_id (text): identifying the molecule in which the bond appears\n- bond_type (text): type of the bond\n### Sample rows of each table in csv format:\n# [molecule]\nmolecule_id,label\nTR000,+\nTR001,+\nTR002,-\n# [bond]\nbond_id,molecule_id,bond_type\nTR000_1_2,TR000,-\nTR000_2_3,TR000,-\nTR000_2_4,TR000,-\n\n### Question: Among all chemical compounds identified in the database, what percent\nof compounds form a triple-bond.\n### Knowledge Evidence: triple bond refers to bond_type = ’#’;\n### Candidate SQLs:\n1. SELECT CAST(COUNT(CASE WHEN bond_type = ’#’ THEN 1 ELSE NULL END) AS REAL) * 100\n/ COUNT(*) FROM bond\n2. SELECT CAST(COUNT(DISTINCT CASE WHEN bond_type = ’#’ THEN molecule_id ELSE NULL\nEND) AS REAL) * 100 / COUNT(DISTINCT molecule_id) FROM bond\n### Checklist:\n1. The SQL should accurately represent the question.\n2. The SQL should accurately use the given knowledge evidence.\n3. The SELECT clause should not include any additional columns that are not included\nin the question.\n4. The order of columns in the SELECT clause must be the same as the order in the\nquestion.\n5. Check if the operations are being performed correctly according to the column\ntype.\n### Instruction:\n- If the first SQL satisfies all the conditions of the checklist, please choose the\nfirst SQL. If not, move on to the next SQL.\n- If there’s no SQL that satisfies all the requirements on the checklist, just\nchoose the first SQL.\n- Provide a detailed step-by-step explanation following the order of the checklist\nwhen checking whether each SQL satisfies the checklist.\n- Your answer should strictly follow the following json format.\n{{\n\"reasoning\": \"\", // The reasoning steps for choosing the best SQL.\n\"sql\": \"\", // The final chosen SQL.\n}}\n### Your Answer:"
+  },
+  {
+    "objectID": "posts/mcs_sql/mcs_sql.html#datasets",
+    "href": "posts/mcs_sql/mcs_sql.html#datasets",
+    "title": "MCS SQL Paper Review",
+    "section": "4.1 Datasets",
+    "text": "4.1 Datasets\n\nSpider : 10,181 질문, 5,693개의 쿼리, 200 DBs\nBIRD : 12,751 질문-SQL pairs, 95 DB. 더 복잡한 쿼리가 포함되어 있음."
+  },
+  {
+    "objectID": "posts/mcs_sql/mcs_sql.html#evaluation-metrics",
+    "href": "posts/mcs_sql/mcs_sql.html#evaluation-metrics",
+    "title": "MCS SQL Paper Review",
+    "section": "4.2 Evaluation Metrics",
+    "text": "4.2 Evaluation Metrics\n\nExecution Accuracy(EX) : 생성한 SQL 실행결과가 gold SQL query(answer) 실행결과가 같은지\nValid Efficiency Score(VES) : BIRD에서 추가로 제시. EX에 gold SQL query 실행 시간과 얼마나 다른지 추가. 정확성과 성능 측정"
+  },
+  {
+    "objectID": "posts/mcs_sql/mcs_sql.html#implementation-details",
+    "href": "posts/mcs_sql/mcs_sql.html#implementation-details",
+    "title": "MCS SQL Paper Review",
+    "section": "4.3 Implementation Details",
+    "text": "4.3 Implementation Details\n\nLLM 모델 : GPT-4\n임베딩 모델 : text-embedding-ada-002\nsimilarity search : FAISS\nschema linking(table, column) prompts \\(p_t\\), \\(p_c\\) : 3개\nSQL generation prompts \\(p_q\\) : 5개\n각 GPT API call 마다 temperature 1.0, n=20 응답 생성\nSQL-generation, MCS 에는 k=20개의 question-SQL pairs를 few-shot example로 사용.\n타임아웃 180초\nconfidence score threshold 0.2"
+  },
+  {
+    "objectID": "posts/xiyan_sql/xiyan_sql.html",
+    "href": "posts/xiyan_sql/xiyan_sql.html",
+    "title": "Xiyan SQL Paper Review",
+    "section": "",
+    "text": "A Preview of XiYan-SQL: A Multi-Generator Ensemble Framework for Text-to-SQL https://arxiv.org/pdf/2411.08599"
+  },
+  {
+    "objectID": "posts/xiyan_sql/xiyan_sql.html#fine-tuned-sql-generator",
+    "href": "posts/xiyan_sql/xiyan_sql.html#fine-tuned-sql-generator",
+    "title": "Xiyan SQL Paper Review",
+    "section": "5.1 Fine-tuned SQL Generator",
+    "text": "5.1 Fine-tuned SQL Generator\n\n핵심 목표는 정밀하고 다양한 SQL 후보들을 생성하는 것.\n\nBasic-syntax training\n\n사전 학습된 모델을 기본적인 SQL 패턴과 문법에 특화하도록 SFT. SQL dialect-agnostic 데이터(수 만개)를 학습해서 포괄적으로 문법을 커버.\n\nGeneration-enhance training\n\n모델의 semantic 이해와 문법 스타일 선호도 향상을 목표로 SFT.\nmulti-task data를 학습해서 유저의 질문과 SQL 쿼리간의 관계를 더 잘 이해.\n\n유저의 질문을 SQL 쿼리로 변환하는 일반적인 task.\nSQL 쿼리를 유저의 질문으로도 변환해서 잠재적인 질문도 추론 할 수 있도록 설계.\nSQL을 주어지고 evidence 후보 중 가장 관련있는 evidence를 선택. evidence = DB 스키마와 관련 contextual information 전체\nSQL 식별 및 재생성 tasks. execution feedback으로 최적화용.\n\nn개의 LLM을 활용해 원래 쿼리의 의미를 바꾸지 않고 여러 가지 방식으로 재구성. 그래서 샘플 데이터를 여러 문법 스타일을 가진 쿼리로 확장할 수 있었음. 이 데이터로 SFT.\n이 방법으로 모델 하나에 하나의 SQL dialect를 타겟할 수도 있고, 여러 SQL dialect를 커버 하도록 학습할 수 있다. 응용에 따라 다름."
+  },
+  {
+    "objectID": "posts/xiyan_sql/xiyan_sql.html#icl-sql-generator",
+    "href": "posts/xiyan_sql/xiyan_sql.html#icl-sql-generator",
+    "title": "Xiyan SQL Paper Review",
+    "section": "5.2 ICL SQL Generator",
+    "text": "5.2 ICL SQL Generator\n\nICL에서는 적절한 examples을 prompt에 추가하는 것이 좋다. (SQL examples)\n유저의 질문(여기서는 test set)과 training set의 질문과 skeleton similarity를 계산해서 example selection을 한다. 개체명은 NLTK를 사용해 special token으로 마스킹을 한다. 예를들어 “America”, “China”를 “&lt;country&gt;”로 마스킹. 열거형 값 같은 것들은 컬럼 이름으로 대체. 이 방법은 개체에 너무 집중하는 것을 방지하고 유사한 질문 구조를 가진 예시를 더 잘 찾는다. training과 test sets의 마스킹한 질문을 embedding을 계산, 그리고 similarity를 계산해서 top-K의 examples를 training set에서 선택.\n하나의 테이블만 참조하는 SQL example은 여러 테이블을 참조하는 SQL generation에 도움 안되는 것을 확인. 그래서 schema linking으로 여러 테이블을 사용해야 한다면 여러 테이블을 사용하는 SQL examples만 선택.\nsimilarity threshold로 질문당 최대 5개의 examples를 선택했다.\nBird, Spider와 같은 벤치마크의 train set과 test set의 DB는 중복되지 않아서 prompt에 schema를 포함하는 것이 도움이 됨. 선택된 SQL example의 테이블에서 최소한의 컬럼만 제공."
+  },
+  {
+    "objectID": "posts/xiyan_sql/xiyan_sql.html#sql-refiner",
+    "href": "posts/xiyan_sql/xiyan_sql.html#sql-refiner",
+    "title": "Xiyan SQL Paper Review",
+    "section": "5.3 SQL Refiner",
+    "text": "5.3 SQL Refiner\n\n생성된 후보 SQL은 logical이나 syntactical errors를 필연적으로 가진다. 그래서 schema-related context를 가지고 생성된 SQL 쿼리와 실행 결과를 가지고 교정(생성)을 한번 더 한다.\n원래 SQL과 교정된 SQL 둘 다 selection model에 제출될 수 있다.\n(메모) 논문에는 ChatGPT와 같은 LLM을 사용했다는 말이 없지만 ChatGPT를 사용한 것 같음."
   }
 ]
