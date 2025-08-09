@@ -22,6 +22,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -219,49 +253,49 @@ window.Quarto = {
 <li>LLM에게 테이블 선택 + 왜 필요한지(CoT) 물음.</li>
 <li>JSON 포맷으로 응답하도록 설정</li>
 </ul>
-<pre><code>### For a given DB schema and question,
-extract the list of tables required
-to write the SQL query.
-### DB schema: ...
-### Question: ...
-
-Your answer should be in the json format
-:
-{
-"reasoning": "..." # The reason for
-selecting each table.
-"answer": [...] # List of selected
-tables.
-}
-### Your answer:</code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">### For a given DB schema and question,</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>extract the list of tables required</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>to write the SQL query.</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">### DB schema: ...</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">### Question: ...</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>Your answer should be in the json format</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>:</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>"reasoning": "..." # The reason for</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>selecting each table.</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>"answer": <span class="co">[</span><span class="ot">...</span><span class="co">]</span> # List of selected</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>tables.</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">### Your answer:</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ul>
 <li>테이블과 컬럼 순서에 따라 결과가 달랐음. 이 영향을 최소화하기 위해 테이블 순서를 셔플해서 <span class="math inline">\(p_t\)</span>개의 distinct prompts 생성. 각 prompt마다 n개 응답 생성(높은 sampling temperature 사용). n개의 응답을 union. 그 이유는 필요없는 테이블은 뒤의 프로세스에서 큰 영향이 없지만 필요한 테이블이 없는 것은 영향이 크기 때문.</li>
 </ul>
 <p><strong>B.1.1 Prompt for Table Linking</strong></p>
-<pre><code>### Given a database schema, question, and knowledge evidence, extract a list of
-tables that should be referenced to convert the question into SQL.
-### SQLite SQL tables, with their properties:
-# molecule ( molecule_id, label )
-# connected ( atom_id, atom_id2, bond_id )
-# bond ( bond_id, molecule_id, bond_type )
-# atom ( atom_id, molecule_id, element )
-#
-# atom.molecule_id = molecule.molecule_id
-# bond.molecule_id = molecule.molecule_id
-# connected.bond_id = bond.bond_id
-# connected.atom_id2 = atom.atom_id
-# connected.atom_id = atom.atom_id
-### Question: Among all chemical compounds identified in the database, what percent
-of compounds form a triple-bond.
-### Knowledge Evidence: triple bond refers to bond_type = ’#’;
-You need to not only select the required tables, but also explain in detail why each
-table is needed.
-Your answer should strictly follow the following json format.
-{
-"reasoning": "", // The reason for choosing each table.
-"tables": [], // List of selected tables.
-}
-### Your Answer:</code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">### Given a database schema, question, and knowledge evidence, extract a list of</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>tables that should be referenced to convert the question into SQL.</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">### SQLite SQL tables, with their properties:</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu"># molecule ( molecule_id, label )</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu"># connected ( atom_id, atom_id2, bond_id )</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu"># bond ( bond_id, molecule_id, bond_type )</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu"># atom ( atom_id, molecule_id, element )</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>#</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu"># atom.molecule_id = molecule.molecule_id</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu"># bond.molecule_id = molecule.molecule_id</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu"># connected.bond_id = bond.bond_id</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu"># connected.atom_id2 = atom.atom_id</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu"># connected.atom_id = atom.atom_id</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">### Question: Among all chemical compounds identified in the database, what percent</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>of compounds form a triple-bond.</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">### Knowledge Evidence: triple bond refers to bond_type = ’#’;</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>You need to not only select the required tables, but also explain in detail why each</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>table is needed.</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>Your answer should strictly follow the following json format.</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>"reasoning": "", // The reason for choosing each table.</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>"tables": [], // List of selected tables.</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="fu">### Your Answer:</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="column-linking" class="level3">
 <h3 class="anchored" data-anchor-id="column-linking">3.1.2 Column Linking</h3>
@@ -272,24 +306,24 @@ Your answer should strictly follow the following json format.
 <li>SQL Generation에서는 Table, Column Linking 결과만을 제시.</li>
 </ul>
 <p><strong>B.1.2 Prompt for Column Linking</strong></p>
-<pre><code>### Given a database schema, question, and knowledge evidence, extract a list of
-columns that should be referenced to convert the question into SQL.
-### SQLite SQL tables, with their properties:
-# molecule ( molecule_id, label )
-# bond ( bond_id, molecule_id, bond_type )
-#
-# bond.molecule_id = molecule.molecule_id
-### Question: Among all chemical compounds identified in the database, what percent
-of compounds form a triple-bond.
-### Knowledge Evidence: triple bond refers to bond_type = ’#’;
-You need to not only select the required columns, but also explain in detail why
-each column is needed.
-Your answer should strictly follow the following json format.
-{{
-"reasoning": "", // The reason for choosing each column.
-"columns": ["table_name_i.column_name_j", ...], // List of selected columns
-}}
-### Your Answer:</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">### Given a database schema, question, and knowledge evidence, extract a list of</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>columns that should be referenced to convert the question into SQL.</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">### SQLite SQL tables, with their properties:</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu"># molecule ( molecule_id, label )</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu"># bond ( bond_id, molecule_id, bond_type )</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>#</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu"># bond.molecule_id = molecule.molecule_id</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">### Question: Among all chemical compounds identified in the database, what percent</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>of compounds form a triple-bond.</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">### Knowledge Evidence: triple bond refers to bond_type = ’#’;</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>You need to not only select the required columns, but also explain in detail why</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>each column is needed.</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>Your answer should strictly follow the following json format.</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>{{</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>"reasoning": "", // The reason for choosing each column.</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>"columns": <span class="co">[</span><span class="ot">"table_name_i.column_name_j", ...</span><span class="co">]</span>, // List of selected columns</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>}}</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="fu">### Your Answer:</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 <section id="multiple-sql-generation" class="level2">
@@ -308,79 +342,79 @@ Your answer should strictly follow the following json format.
 <li>위 두 가지 방법으로 <span class="math inline">\(p_q\)</span> 개의 prompts를 만드는데, 하나는 오직 question similarity, 다른 것은 masked similarity, 나머지는 두 가지를 합쳐서 다양한 순서로 만듬.</li>
 </ul>
 <p><strong>B.2 Prompt for Question Masking</strong></p>
-<pre><code>### Given a DB schema and a question, mask the table name, column name, and values
-in the question.
-
-&lt;example1&gt;
-### SQLite SQL tables, with their properties:
-# customers ( CustomerID: integer, Segment: text, Currency: text )
-# gasstations ( GasStationID: integer, ChainID: integer, Country: text, Segment:
-text )
-# products ( ProductID: integer, Description: text )
-# transactions_1k ( TransactionID: integer, Date: date, Time: text, CustomerID:
-integer, CardID: integer, GasStationID: integer, ProductID: integer, Amount:
-integer, Price: real )
-# yearmonth ( CustomerID: integer, Date: text, Consumption: real )
-### Question: For all the people who paid more than 29.00 per unit of product id No
-.5. Give their consumption status in the August of 2012.
-### Masked Question: For all the [TABLE] who paid more than [VALUE] per unit of [
-COLUMN] [VALUE]. Give their consumption status in the [VALUE].
-&lt;/example1&gt;
-
-&lt;example2&gt;
-### SQLite SQL tables, with their properties:
-# customers ( CustomerID: integer, Segment: text, Currency: text )
-# gasstations ( GasStationID: integer, ChainID: integer, Country: text, Segment:
-text )
-# products ( ProductID: integer, Description: text )
-# transactions_1k ( TransactionID: integer, Date: date, Time: text, CustomerID:
-integer, CardID: integer, GasStationID: integer, ProductID: integer, Amount:
-integer, Price: real )
-# yearmonth ( CustomerID: integer, Date: text, Consumption: real )
-### Question: How much did customer 6 consume in total between August and November
-2013?
-### Masked Question: How much did [TABLE] [VALUE] consume in total between [VALUE]
-and [VALUE]?
-&lt;/example2&gt;
-
-&lt;example3&gt;
-### SQLite SQL tables, with their properties:
-# drivers ( driverId: integer, driverRef: text, number: integer, code: text,
-forename: text, surname: text, dob: date, nationality: text, url: text )
-### Question: How many Australian drivers who were born in 1980?
-### Masked Question: How many [VALUE] [TABLE] who were born in [VALUE]?
-&lt;/example3&gt;
-
-### SQLite SQL tables, with their properties:
-# molecule ( molecule_id, label )
-# bond ( bond_id, molecule_id, bond_type )
-#
-# bond.molecule_id = molecule.molecule_id
-### Question: Among all chemical compounds identified in the database, what percent
-of compounds form a triple-bond.
-### Knowledge Evidence: triple bond refers to bond_type = ’#’;
-### Masked Question:</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">### Given a DB schema and a question, mask the table name, column name, and values</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>in the question.</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>&lt;example1&gt;</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">### SQLite SQL tables, with their properties:</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu"># customers ( CustomerID: integer, Segment: text, Currency: text )</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu"># gasstations ( GasStationID: integer, ChainID: integer, Country: text, Segment:</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>text )</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu"># products ( ProductID: integer, Description: text )</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu"># transactions_1k ( TransactionID: integer, Date: date, Time: text, CustomerID:</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>integer, CardID: integer, GasStationID: integer, ProductID: integer, Amount:</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>integer, Price: real )</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="fu"># yearmonth ( CustomerID: integer, Date: text, Consumption: real )</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="fu">### Question: For all the people who paid more than 29.00 per unit of product id No</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>.5. Give their consumption status in the August of 2012.</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="fu">### Masked Question: For all the [TABLE] who paid more than [VALUE] per unit of [</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>COLUMN] <span class="co">[</span><span class="ot">VALUE</span><span class="co">]</span>. Give their consumption status in the <span class="co">[</span><span class="ot">VALUE</span><span class="co">]</span>.</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>&lt;/example1&gt;</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>&lt;example2&gt;</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="fu">### SQLite SQL tables, with their properties:</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="fu"># customers ( CustomerID: integer, Segment: text, Currency: text )</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="fu"># gasstations ( GasStationID: integer, ChainID: integer, Country: text, Segment:</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>text )</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="fu"># products ( ProductID: integer, Description: text )</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="fu"># transactions_1k ( TransactionID: integer, Date: date, Time: text, CustomerID:</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>integer, CardID: integer, GasStationID: integer, ProductID: integer, Amount:</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>integer, Price: real )</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="fu"># yearmonth ( CustomerID: integer, Date: text, Consumption: real )</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="fu">### Question: How much did customer 6 consume in total between August and November</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>2013?</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="fu">### Masked Question: How much did [TABLE] [VALUE] consume in total between [VALUE]</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>and <span class="co">[</span><span class="ot">VALUE</span><span class="co">]</span>?</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>&lt;/example2&gt;</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>&lt;example3&gt;</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="fu">### SQLite SQL tables, with their properties:</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="fu"># drivers ( driverId: integer, driverRef: text, number: integer, code: text,</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>forename: text, surname: text, dob: date, nationality: text, url: text )</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a><span class="fu">### Question: How many Australian drivers who were born in 1980?</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a><span class="fu">### Masked Question: How many [VALUE] [TABLE] who were born in [VALUE]?</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>&lt;/example3&gt;</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a><span class="fu">### SQLite SQL tables, with their properties:</span></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a><span class="fu"># molecule ( molecule_id, label )</span></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="fu"># bond ( bond_id, molecule_id, bond_type )</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>#</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="fu"># bond.molecule_id = molecule.molecule_id</span></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="fu">### Question: Among all chemical compounds identified in the database, what percent</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>of compounds form a triple-bond.</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="fu">### Knowledge Evidence: triple bond refers to bond_type = ’#’;</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="fu">### Masked Question:</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="sql-generation" class="level3">
 <h3 class="anchored" data-anchor-id="sql-generation">3.2.2 SQL Generation</h3>
-<pre><code>### Generate the correct SQL query for a
-given DB schema and question.
-### Gold Examples:
-- Question: ...
-- Gold SQL: ...
-...
-
-### DB Schema: ...
-### Sample Table Contents: ...
-### Question: ...
-Your answer should be in the json format
-:
-{
-"reasoning": ".." # The reasoning
-steps behind the generated SQL query
-"sql": ".." # The generated SQL query.
-}
-### Your answer:</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">### Generate the correct SQL query for a</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>given DB schema and question.</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">### Gold Examples:</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Question: ...</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Gold SQL: ...</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>...</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">### DB Schema: ...</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">### Sample Table Contents: ...</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="fu">### Question: ...</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>Your answer should be in the json format</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>:</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>"reasoning": ".." # The reasoning</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>steps behind the generated SQL query</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>"sql": ".." # The generated SQL query.</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="fu">### Your answer:</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ul>
 <li>prompt에는 few-shot examples, DB schema, sample rows, question이 포함.</li>
 <li>few-show examples에는 질문-gold SQL pairs 가 포함.</li>
@@ -390,66 +424,66 @@ steps behind the generated SQL query
 <li><span class="math inline">\(p_q\)</span>개의 prompt, 각 n개 응답 생성. (with a high sampling temperature)</li>
 </ul>
 <p><strong>B.3 Prompt for SQL Generation</strong></p>
-<pre><code>### Given a database schema, question, and knowledge evidence, generate the correct
-sqlite SQL query for the question.
-
-&lt;examples&gt;
-# Question: Among all the customers, what is the percentage of the customer’s nation
-being Germany?
-# Knowledge Evidence: DIVIDE(COUNT(c_custkey when n_name = ’GERMANY’), COUNT(
-c_custkey)) as percentage;
-# Gold SQL: SELECT CAST(SUM(IIF(T2.n_name = ’GERMANY’, 1, 0)) AS REAL) * 100 / COUNT
-(T1.c_custkey) FROM customer AS T1 INNER JOIN nation AS T2 ON T1.c_nationkey =
-T2.n_nationkey
-
-# Question: Among the schools whose donators are teachers, what is the percentage of
-schools that are in Brooklyn?
-# Knowledge Evidence: donors are teachers refers to is_teacher_acct = ’t’; Brooklyn
-is school_city; percentage = Divide(Count(school_city-’Brooklyn’),Count(
-school_city))*100
-# Gold SQL: SELECT CAST(SUM(CASE WHEN T1.school_city LIKE ’Brooklyn’ THEN 1 ELSE 0
-END) AS REAL) * 100 / COUNT(T1.teacher_acctid) FROM projects AS T1 INNER JOIN
-donations AS T2 ON T1.projectid = T2.projectid WHERE T2.is_teacher_acct = ’t’
-...
-&lt;/examples&gt;
-
-### SQLite SQL tables, with their properties:
-# molecule ( molecule_id, label )
-# bond ( bond_id, molecule_id, bond_type )
-#
-# bond.molecule_id = molecule.molecule_id
-### The type and description of each column:
-# [molecule]
-- molecule_id (text): unique id of molecule
-- label (text): whether this molecule is carcinogenic or not
-# [bond]
-- bond_id (text): unique id representing bonds
-- molecule_id (text): identifying the molecule in which the bond appears
-- bond_type (text): type of the bond
-### Sample rows of each table in csv format:
-# [molecule]
-molecule_id,label
-TR000,+
-TR001,+
-TR002,-
-# [bond]
-bond_id,molecule_id,bond_type
-TR000_1_2,TR000,-
-TR000_2_3,TR000,-
-TR000_2_4,TR000,-
-
-### Question: Among all chemical compounds identified in the database, what percent
-of compounds form a triple-bond.
-
-### Knowledge Evidence: triple bond refers to bond_type = ’#’;
-You need to not only create the SQL, but also provide the detailed reasoning steps
-required to create the SQL. Your answer should strictly follow the following
-json format:
-{
-"reasoning": "", // The reasoning steps for generating SQL.
-"sql": "", // The final generated SQL.
-}
-### Your Answer:</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">### Given a database schema, question, and knowledge evidence, generate the correct</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>sqlite SQL query for the question.</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>&lt;examples&gt;</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question: Among all the customers, what is the percentage of the customer’s nation</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>being Germany?</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu"># Knowledge Evidence: DIVIDE(COUNT(c_custkey when n_name = ’GERMANY’), COUNT(</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>c_custkey)) as percentage;</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu"># Gold SQL: SELECT CAST(SUM(IIF(T2.n_name = ’GERMANY’, 1, 0)) AS REAL) * 100 / COUNT</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>(T1.c_custkey) FROM customer AS T1 INNER JOIN nation AS T2 ON T1.c_nationkey =</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>T2.n_nationkey</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question: Among the schools whose donators are teachers, what is the percentage of</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>schools that are in Brooklyn?</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="fu"># Knowledge Evidence: donors are teachers refers to is_teacher_acct = ’t’; Brooklyn</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>is school_city; percentage = Divide(Count(school_city-’Brooklyn’),Count(</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>school_city))*100</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="fu"># Gold SQL: SELECT CAST(SUM(CASE WHEN T1.school_city LIKE ’Brooklyn’ THEN 1 ELSE 0</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>END) AS REAL) * 100 / COUNT(T1.teacher_acctid) FROM projects AS T1 INNER JOIN</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>donations AS T2 ON T1.projectid = T2.projectid WHERE T2.is_teacher_acct = ’t’</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>...</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>&lt;/examples&gt;</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="fu">### SQLite SQL tables, with their properties:</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="fu"># molecule ( molecule_id, label )</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="fu"># bond ( bond_id, molecule_id, bond_type )</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>#</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="fu"># bond.molecule_id = molecule.molecule_id</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="fu">### The type and description of each column:</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="fu"># [molecule]</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>molecule_id (text): unique id of molecule</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>label (text): whether this molecule is carcinogenic or not</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a><span class="fu"># [bond]</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>bond_id (text): unique id representing bonds</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>molecule_id (text): identifying the molecule in which the bond appears</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>bond_type (text): type of the bond</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a><span class="fu">### Sample rows of each table in csv format:</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a><span class="fu"># [molecule]</span></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>molecule_id,label</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>TR000,+</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>TR001,+</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>TR002,-</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a><span class="fu"># [bond]</span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>bond_id,molecule_id,bond_type</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>TR000_1_2,TR000,-</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>TR000_2_3,TR000,-</span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>TR000_2_4,TR000,-</span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a><span class="fu">### Question: Among all chemical compounds identified in the database, what percent</span></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>of compounds form a triple-bond.</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a><span class="fu">### Knowledge Evidence: triple bond refers to bond_type = ’#’;</span></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>You need to not only create the SQL, but also provide the detailed reasoning steps</span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>required to create the SQL. Your answer should strictly follow the following</span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>json format:</span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>"reasoning": "", // The reasoning steps for generating SQL.</span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>"sql": "", // The final generated SQL.</span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a><span class="fu">### Your Answer:</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 <section id="selection" class="level2">
@@ -470,106 +504,106 @@ json format:
 </section>
 <section id="multiple-choise-selection-mcs" class="level3">
 <h3 class="anchored" data-anchor-id="multiple-choise-selection-mcs">3.3.2 Multiple-Choise Selection (MCS)</h3>
-<pre><code>### For a given DB schema and question,
-select the most accurate query among
-the candidate SQL queries.
-### DB schema: ...
-### Question: ...
-### Candidate SQLs:
-1. SQL1
-2. SQL2
-3. SQL3
-Your answer should be in the json format
-:
-{
-"reasoning": ".." # The reasoning
-steps for selecting the correct SQL
-query.
-"sql": ".." # The selected SQL query.
-}</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">### For a given DB schema and question,</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>select the most accurate query among</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>the candidate SQL queries.</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">### DB schema: ...</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">### Question: ...</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">### Candidate SQLs:</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>SQL1</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>SQL2</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>SQL3</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>Your answer should be in the json format</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>:</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>"reasoning": ".." # The reasoning</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>steps for selecting the correct SQL</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>query.</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>"sql": ".." # The selected SQL query.</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ul>
 <li>LLM을 사용해서 위에서 만든 후보 풀에서 가장 정확한 쿼리를 선택.</li>
 <li>후보 쿼리들은 confidence scores가 내림차순으로 정렬.</li>
 <li>n개의 응답을 생성. 가장 많은 투표를 받은 쿼리 선택.</li>
 </ul>
 <p><strong>B.4 Prompt for SQL Selection</strong></p>
-<pre><code>### When a DB schema, a question, and a knowledge evidence are given, and up to
-three SQLite queries expressing the question are given, please choose the most
-accurate SQL based on the Checklist.
-&lt;examples&gt;
-# Question: Among all the customers, what is the percentage of the customer’s nation
-being Germany?
-# Knowledge Evidence: DIVIDE(COUNT(c_custkey when n_name = ’GERMANY’), COUNT(
-c_custkey)) as percentage;
-# Gold SQL: SELECT CAST(SUM(IIF(T2.n_name = ’GERMANY’, 1, 0)) AS REAL) * 100 / COUNT
-(T1.c_custkey) FROM customer AS T1 INNER JOIN nation AS T2 ON T1.c_nationkey =
-T2.n_nationkey
-# Question: Among the schools whose donators are teachers, what is the percentage of
-schools that are in Brooklyn?
-# Knowledge Evidence: donors are teachers refers to is_teacher_acct = ’t’; Brooklyn
-is school_city; percentage = Divide(Count(school_city-’Brooklyn’),Count(
-school_city))*100
-# Gold SQL: SELECT CAST(SUM(CASE WHEN T1.school_city LIKE ’Brooklyn’ THEN 1 ELSE 0
-END) AS REAL) * 100 / COUNT(T1.teacher_acctid) FROM projects AS T1 INNER JOIN
-donations AS T2 ON T1.projectid = T2.projectid WHERE T2.is_teacher_acct = ’t’
-...
-&lt;/examples&gt;
-
-### SQLite SQL tables, with their properties:
-# molecule ( molecule_id, label )
-# bond ( bond_id, molecule_id, bond_type )
-#
-# bond.molecule_id = molecule.molecule_id
-### The type and description of each column:
-# [molecule]
-- molecule_id (text): unique id of molecule
-- label (text): whether this molecule is carcinogenic or not
-# [bond]
-- bond_id (text): unique id representing bonds
-- molecule_id (text): identifying the molecule in which the bond appears
-- bond_type (text): type of the bond
-### Sample rows of each table in csv format:
-# [molecule]
-molecule_id,label
-TR000,+
-TR001,+
-TR002,-
-# [bond]
-bond_id,molecule_id,bond_type
-TR000_1_2,TR000,-
-TR000_2_3,TR000,-
-TR000_2_4,TR000,-
-
-### Question: Among all chemical compounds identified in the database, what percent
-of compounds form a triple-bond.
-### Knowledge Evidence: triple bond refers to bond_type = ’#’;
-### Candidate SQLs:
-1. SELECT CAST(COUNT(CASE WHEN bond_type = ’#’ THEN 1 ELSE NULL END) AS REAL) * 100
-/ COUNT(*) FROM bond
-2. SELECT CAST(COUNT(DISTINCT CASE WHEN bond_type = ’#’ THEN molecule_id ELSE NULL
-END) AS REAL) * 100 / COUNT(DISTINCT molecule_id) FROM bond
-### Checklist:
-1. The SQL should accurately represent the question.
-2. The SQL should accurately use the given knowledge evidence.
-3. The SELECT clause should not include any additional columns that are not included
-in the question.
-4. The order of columns in the SELECT clause must be the same as the order in the
-question.
-5. Check if the operations are being performed correctly according to the column
-type.
-### Instruction:
-- If the first SQL satisfies all the conditions of the checklist, please choose the
-first SQL. If not, move on to the next SQL.
-- If there’s no SQL that satisfies all the requirements on the checklist, just
-choose the first SQL.
-- Provide a detailed step-by-step explanation following the order of the checklist
-when checking whether each SQL satisfies the checklist.
-- Your answer should strictly follow the following json format.
-{{
-"reasoning": "", // The reasoning steps for choosing the best SQL.
-"sql": "", // The final chosen SQL.
-}}
-### Your Answer:</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">### When a DB schema, a question, and a knowledge evidence are given, and up to</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>three SQLite queries expressing the question are given, please choose the most</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>accurate SQL based on the Checklist.</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>&lt;examples&gt;</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question: Among all the customers, what is the percentage of the customer’s nation</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>being Germany?</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu"># Knowledge Evidence: DIVIDE(COUNT(c_custkey when n_name = ’GERMANY’), COUNT(</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>c_custkey)) as percentage;</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu"># Gold SQL: SELECT CAST(SUM(IIF(T2.n_name = ’GERMANY’, 1, 0)) AS REAL) * 100 / COUNT</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>(T1.c_custkey) FROM customer AS T1 INNER JOIN nation AS T2 ON T1.c_nationkey =</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>T2.n_nationkey</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question: Among the schools whose donators are teachers, what is the percentage of</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>schools that are in Brooklyn?</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="fu"># Knowledge Evidence: donors are teachers refers to is_teacher_acct = ’t’; Brooklyn</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>is school_city; percentage = Divide(Count(school_city-’Brooklyn’),Count(</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>school_city))*100</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="fu"># Gold SQL: SELECT CAST(SUM(CASE WHEN T1.school_city LIKE ’Brooklyn’ THEN 1 ELSE 0</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>END) AS REAL) * 100 / COUNT(T1.teacher_acctid) FROM projects AS T1 INNER JOIN</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>donations AS T2 ON T1.projectid = T2.projectid WHERE T2.is_teacher_acct = ’t’</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>...</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>&lt;/examples&gt;</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="fu">### SQLite SQL tables, with their properties:</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="fu"># molecule ( molecule_id, label )</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="fu"># bond ( bond_id, molecule_id, bond_type )</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>#</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="fu"># bond.molecule_id = molecule.molecule_id</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="fu">### The type and description of each column:</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="fu"># [molecule]</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>molecule_id (text): unique id of molecule</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>label (text): whether this molecule is carcinogenic or not</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="fu"># [bond]</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>bond_id (text): unique id representing bonds</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>molecule_id (text): identifying the molecule in which the bond appears</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>bond_type (text): type of the bond</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a><span class="fu">### Sample rows of each table in csv format:</span></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a><span class="fu"># [molecule]</span></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>molecule_id,label</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>TR000,+</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>TR001,+</span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>TR002,-</span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a><span class="fu"># [bond]</span></span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>bond_id,molecule_id,bond_type</span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>TR000_1_2,TR000,-</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>TR000_2_3,TR000,-</span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>TR000_2_4,TR000,-</span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a><span class="fu">### Question: Among all chemical compounds identified in the database, what percent</span></span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>of compounds form a triple-bond.</span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a><span class="fu">### Knowledge Evidence: triple bond refers to bond_type = ’#’;</span></span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a><span class="fu">### Candidate SQLs:</span></span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>SELECT CAST(COUNT(CASE WHEN bond_type = ’#’ THEN 1 ELSE NULL END) AS REAL) * 100</span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>/ COUNT(*) FROM bond</span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>SELECT CAST(COUNT(DISTINCT CASE WHEN bond_type = ’#’ THEN molecule_id ELSE NULL</span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>END) AS REAL) * 100 / COUNT(DISTINCT molecule_id) FROM bond</span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a><span class="fu">### Checklist:</span></span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>The SQL should accurately represent the question.</span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>The SQL should accurately use the given knowledge evidence.</span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>The SELECT clause should not include any additional columns that are not included</span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a>in the question.</span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>The order of columns in the SELECT clause must be the same as the order in the</span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a>question.</span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>Check if the operations are being performed correctly according to the column</span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>type.</span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a><span class="fu">### Instruction:</span></span>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>If the first SQL satisfies all the conditions of the checklist, please choose the</span>
+<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a>first SQL. If not, move on to the next SQL.</span>
+<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>If there’s no SQL that satisfies all the requirements on the checklist, just</span>
+<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a>choose the first SQL.</span>
+<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Provide a detailed step-by-step explanation following the order of the checklist</span>
+<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a>when checking whether each SQL satisfies the checklist.</span>
+<span id="cb8-72"><a href="#cb8-72" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Your answer should strictly follow the following json format.</span>
+<span id="cb8-73"><a href="#cb8-73" aria-hidden="true" tabindex="-1"></a>{{</span>
+<span id="cb8-74"><a href="#cb8-74" aria-hidden="true" tabindex="-1"></a>"reasoning": "", // The reasoning steps for choosing the best SQL.</span>
+<span id="cb8-75"><a href="#cb8-75" aria-hidden="true" tabindex="-1"></a>"sql": "", // The final chosen SQL.</span>
+<span id="cb8-76"><a href="#cb8-76" aria-hidden="true" tabindex="-1"></a>}}</span>
+<span id="cb8-77"><a href="#cb8-77" aria-hidden="true" tabindex="-1"></a><span class="fu">### Your Answer:</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 </section>
